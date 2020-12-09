@@ -14,10 +14,9 @@ public class TapToPlayText : MonoBehaviour
 
     private void OnEnable()
     {
-        if (!sequence.IsPlaying())
-        {
-            sequence.TogglePause();
-        }
+        if (sequence.IsPlaying()) { return; }
+        sequence.TogglePause();
+        
     }
 
     private void OnDisable()

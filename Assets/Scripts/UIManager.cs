@@ -4,15 +4,45 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using TMPro;
+using System;
 
 public class UIManager : MonoBehaviour, IPointerDownHandler
 {
+    public static event Action OnPlayerTapped;
+    public static event Action OnPauseButtonClicked;
+    public static event Action OnResumeButtonClicked;
+
     [SerializeField] private TextMeshProUGUI tapArea;
     [SerializeField] private TextMeshProUGUI tapToPlayText;
     [SerializeField] private Button topRunButton;
+    [SerializeField] private Button pauseButton;
+    [SerializeField] private Button resumeButton;
     public void OnPointerDown(PointerEventData eventData)
     {
-        OnPlayerTapped();
+        OnPlayerTapped?.Invoke();
+        HandlePlayerTap();
+    }
+
+    private void HandlePlayerTap()
+    {
+        tapArea.gameObject.SetActive(false);
+        tapToPlayText.gameObject.SetActive(false);
+        topRunButton.gameObject.SetActive(false);
+        pauseButton.gameObject.SetActive(true);
+    }
+
+    public void HandlePauseButtonClick()
+    {
+        OnPauseButtonClicked?.Invoke();
+        pauseButton.gameObject.SetActive(false);
+        resumeButton.gameObject.SetActive(true);
+    }
+
+    public void HandleResumeButtonClick()
+    {
+        OnResumeButtonClicked?.Invoke();
+        pauseButton.gameObject.SetActive(true);
+        resumeButton.gameObject.SetActive(false);
     }
 
     private void OnEnable()
@@ -21,11 +51,6 @@ public class UIManager : MonoBehaviour, IPointerDownHandler
     }
 
     private void OnDisable()
-    {
-        
-    }
-
-    private void OnPlayerTapped()
     {
         
     }

@@ -4,26 +4,26 @@ using System;
 
 public class TouchController : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler, IPointerDownHandler
 {
-    public static event Action<Vector2> OnBeginDragMovement;
-    public static event Action<Vector2> OnDragMovement;
-    public static event Action<Vector2> OnEndDragMovement;
+    public static event Action<PointerEventData> OnBeginDragMovement;
+    public static event Action<PointerEventData> OnDragMovement;
+    public static event Action<PointerEventData> OnEndDragMovement;
     public static event Action OnPointerDownMovement;
 
     public void OnBeginDrag(PointerEventData eventData)
     {
-        OnBeginDragMovement?.Invoke(eventData.position);
+        OnBeginDragMovement?.Invoke(eventData);
     }
 
     public void OnDrag(PointerEventData eventData)
     {
-        OnDragMovement?.Invoke(eventData.position);
+        OnDragMovement?.Invoke(eventData);
     }
 
     public void OnEndDrag(PointerEventData eventData)
     {
-        OnEndDragMovement?.Invoke(eventData.position);
+        OnEndDragMovement?.Invoke(eventData);
     }
-    
+
     public void OnPointerDown(PointerEventData eventData)
     {
         OnPointerDownMovement?.Invoke();

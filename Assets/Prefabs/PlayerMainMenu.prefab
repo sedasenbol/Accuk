@@ -612,7 +612,7 @@ GameObject:
   - component: {fileID: 7657550010383428733}
   - component: {fileID: 7710562089853739707}
   m_Layer: 0
-  m_Name: Player
+  m_Name: PlayerMainMenu
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -627,7 +627,7 @@ Transform:
   m_GameObject: {fileID: 7661145961233415563}
   m_LocalRotation: {x: 0, y: 1, z: 0, w: 0}
   m_LocalPosition: {x: 0, y: -0.54, z: -4.63}
-  m_LocalScale: {x: 3, y: 3, z: 3}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 7663596802737408125}
   - {fileID: 7657354576134896931}
@@ -644,7 +644,7 @@ Animator:
   m_GameObject: {fileID: 7661145961233415563}
   m_Enabled: 1
   m_Avatar: {fileID: 9000000, guid: 45d480461bbdc704587e117329ce8e69, type: 3}
-  m_Controller: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: ddef2e3f076764e40b4d48275c65105b, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0

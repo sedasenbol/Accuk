@@ -32,11 +32,19 @@ public class GameManager : MonoBehaviour
         gameState.CurrentState = GameState.State.OnPlay;
     }
 
+    private void GameOver()
+    {
+        Time.timeScale = 0f;
+        gameState.CurrentState = GameState.State.GameOver;
+        gameState.IsAlive = false;
+    }
+
     private void OnEnable()
     {
         UIManager.OnPlayerTapped += StartGame;
         UIManager.OnPauseButtonClicked += PauseGame;
         UIManager.OnResumeButtonClicked += ResumeGame;
+        Player.OnPlayerDeath += GameOver;
     }
 
     private void OnDisable()
@@ -44,6 +52,7 @@ public class GameManager : MonoBehaviour
         UIManager.OnPlayerTapped -= StartGame;
         UIManager.OnPauseButtonClicked -= PauseGame;
         UIManager.OnResumeButtonClicked -= ResumeGame;
+        Player.OnPlayerDeath -= GameOver;
     }
 
     private void Start()

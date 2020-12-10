@@ -12,7 +12,7 @@ public class CameraFollow : MonoBehaviour
 
     private void FollowTarget()
     {
-        xform.position = targetTransform.position + offset;
+        xform.position = new Vector3(targetTransform.position.x, 0, targetTransform.position.z) + offset;
     }
 
     private void LoadGameCamera(Scene scene, LoadSceneMode mode)

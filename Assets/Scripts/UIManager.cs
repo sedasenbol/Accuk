@@ -45,14 +45,21 @@ public class UIManager : MonoBehaviour, IPointerDownHandler
         resumeButton.gameObject.SetActive(false);
     }
 
+    private void LoadGameOverScreen()
+    {
+        pauseButton.gameObject.SetActive(false);
+        tapToPlayText.gameObject.SetActive(true);
+        topRunButton.gameObject.SetActive(true);
+    }
+
     private void OnEnable()
     {
-
+        Player.OnPlayerDeath += LoadGameOverScreen;
     }
 
     private void OnDisable()
     {
-        
+        Player.OnPlayerDeath -= LoadGameOverScreen;
     }
 
     private void Start()

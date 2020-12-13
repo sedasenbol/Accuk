@@ -23,7 +23,7 @@ public class CameraFollow : MonoBehaviour
         targetTransform = GameObject.FindGameObjectWithTag("Player").transform;
         
         cam = Camera.main;
-        cam.clearFlags = CameraClearFlags.Skybox;
+        cam.backgroundColor = Color.cyan ;
     }
 
     private void OnEnable()

@@ -19,14 +19,15 @@ public class Player : MonoBehaviour
     private const float SLIDING_TIME = 0.5f;
 
     private const float LANE_SWITCH_TIME = 0.5f;
-    private const float LANE_WIDTH = 0.55f;
+    private const float LANE_WIDTH = 0.65f;
     private const float LANE_ERROR_MARGIN = 0.01f;
     private readonly Vector3 switchLaneRotation = new Vector3(0f, 0f, 20f);
 
-    private readonly Vector3 jumpForce = new Vector3(0f, 5f, 0f);
+    private readonly Vector3 jumpForce = new Vector3(0f, 3f, 0f);
+    private readonly Vector3 highJumpForce = new Vector3(0f, 5f, 0f);
     private readonly Vector3 pullDownForce = new Vector3(0f, -10f, 0f);
     private const float JUMP_ROTATION_TIME = 0.5f;
-    private const int JUMP_ROTATION_RANDOM_COUNT = 5;
+    private const int JUMP_ROTATION_RANDOM_COUNT = 2;
     private readonly Vector3 jumpRotationX = new Vector3(360f, 0f, 0f);
     private readonly Vector3 jumpRotationY = new Vector3(0f, 360f, 0f);
 
@@ -39,6 +40,7 @@ public class Player : MonoBehaviour
 
     private bool isAlive = true;
     private bool isRotating = true;
+    private bool highJumpPowerUp = false;
     private bool isJumping = false;
     private bool isSliding = false;
     private bool isSwitchingLanes = false;
@@ -167,31 +169,39 @@ public class Player : MonoBehaviour
 
         isJumping = true;
 
-        rb.useGravity = false;
+        /*rb.useGravity = false;
         Sequence sequence = DOTween.Sequence();
-        sequence.Append(rb.DOMoveY(1, 1)).OnComplete(() => rb.useGravity = true);
+        sequence.Append(rb.DOMoveY(1, 1)).OnComplete(() => rb.useGravity = true);*/
         
-
-        //rb.AddForce(jumpForce, ForceMode.Impulse);
+        if (highJumpPowerUp)
+        {
+            rb.AddForce(highJumpForce, ForceMode.Impulse);
+        }
+        else
+        {
+            rb.AddForce(jumpForce, ForceMode.Impulse);
+        }
+        
         anim.SetBool("isJumping", true);
     }
 
     private void RotateWhileJumping()
     {
-        if (rb.position.y < 0.8f || rb.useGravity == true) { return; }
+        if (rb.position.y < 1f || isJumping == false) { return; }
 
-        int randomJumpRotation = UnityEngine.Random.Range(0, JUMP_ROTATION_RANDOM_COUNT);
-        switch (0)
+        int randomJumpRotation = UnityEngine.Random.Range(0, 5);// JUMP_ROTATION_RANDOM_COUNT);
+        Debug.Log(randomJumpRotation);
+        switch (randomJumpRotation)
         {
             case 0:
                 isRotating = true;
-                rb.constraints &= ~RigidbodyConstraints.FreezeRotationX;
+                //rb.constraints &= ~RigidbodyConstraints.FreezeRotationX;
 
                 Tween tween0 = rb.DORotate(jumpRotationX, JUMP_ROTATION_TIME, RotateMode.FastBeyond360);
-                tween0.SetRelative().SetEase(Ease.Linear);
+                tween0.SetRelative();//.SetEase(Ease.Linear);
                 tween0.OnComplete(() =>
                 {
-                    rb.constraints |= RigidbodyConstraints.FreezeRotationX;
+                    //rb.constraints |= RigidbodyConstraints.FreezeRotationX;
                     isRotating = false;
                 });
                 break;
@@ -199,10 +209,15 @@ public class Player : MonoBehaviour
                 isRotating = true;
 
                 Tween tween1 = rb.DORotate(jumpRotationY, JUMP_ROTATION_TIME, RotateMode.FastBeyond360);
-                tween1.SetRelative().SetEase(Ease.Linear);
+                tween1.SetRelative();//.SetEase(Ease.Linear);
                 tween1.OnComplete(() => isRotating = false);
                 break;
         }
+    }
+
+    private void PullDown()
+    {
+        rb.AddForce(pullDownForce, ForceMode.Impulse);
     }
 
     private void Slide()
@@ -225,11 +240,6 @@ public class Player : MonoBehaviour
             anim.SetBool("isSliding", false);
         });
         sequence.Play();
-    }
-
-    private void PullDown()
-    {
-        rb.AddForce(pullDownForce, ForceMode.Impulse);
     }
 
     private void InitialRotation()
@@ -326,7 +336,7 @@ public class Player : MonoBehaviour
     {
         if (!isAlive) { return; }
         MoveForward();
-        if (isJumping && !isRotating)
+        if (isJumping && highJumpPowerUp && !isRotating)
         {
             RotateWhileJumping();
         }

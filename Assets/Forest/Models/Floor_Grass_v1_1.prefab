@@ -10,7 +10,6 @@ GameObject:
   m_Component:
   - component: {fileID: 4557539474977832}
   - component: {fileID: 33389351520890386}
-  - component: {fileID: 684073316732167571}
   - component: {fileID: 23424634570578150}
   m_Layer: 0
   m_Name: Floor_Grass_v1_1
@@ -26,7 +25,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1601105362641560}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: 0.000000021855694, y: 0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
@@ -41,18 +40,6 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1601105362641560}
   m_Mesh: {fileID: 4300020, guid: 11513268302b562498f3c140346b22c8, type: 3}
---- !u!114 &684073316732167571
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1601105362641560}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0e61b99844b91b64eae9b14b0802467c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!23 &23424634570578150
 MeshRenderer:
   m_ObjectHideFlags: 0

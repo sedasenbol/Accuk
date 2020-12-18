@@ -39,8 +39,8 @@ public class CitySpawn : MonoBehaviour
     {
         for (int i = 0; i < INITIAL_SPAWN_COUNT / 2; i++)
         {
-            int randomLeftBuildingIndex = Random.Range(0, BUILDING_PREFAB_COUNT);
-            int randomRightBuildingIndex = Random.Range(0, BUILDING_PREFAB_COUNT);
+            int randomLeftBuildingIndex = Random.Range(1, BUILDING_PREFAB_COUNT + 1);
+            int randomRightBuildingIndex = Random.Range(1, BUILDING_PREFAB_COUNT + 1);
 
             ObjectPooler.objectTag leftTag = RandomTagConverter(randomLeftBuildingIndex);
             ObjectPooler.objectTag rightTag = RandomTagConverter(randomRightBuildingIndex);
@@ -63,7 +63,9 @@ public class CitySpawn : MonoBehaviour
     {
         if (playerTransform.position.z < leftZpositions.Peek() + SPAWN_OFFSET) { return; }
 
-        int randomLeftBuildingIndex = Random.Range(0, BUILDING_PREFAB_COUNT);
+        leftZpositions.Dequeue();
+
+        int randomLeftBuildingIndex = Random.Range(1, BUILDING_PREFAB_COUNT+1);
 
         ObjectPooler.objectTag leftTag = RandomTagConverter(randomLeftBuildingIndex);
 
@@ -77,7 +79,9 @@ public class CitySpawn : MonoBehaviour
     {
         if (playerTransform.position.z < rightZpositions.Peek() + SPAWN_OFFSET) { return; }
 
-        int randomRightBuildingIndex = Random.Range(0, BUILDING_PREFAB_COUNT);
+        rightZpositions.Dequeue();
+
+        int randomRightBuildingIndex = Random.Range(1, BUILDING_PREFAB_COUNT + 1);
 
         ObjectPooler.objectTag rightTag = RandomTagConverter(randomRightBuildingIndex);
 

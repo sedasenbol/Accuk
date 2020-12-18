@@ -12,7 +12,7 @@ public class Player : MonoBehaviour
     private const float INITIAL_ROTATION_TIME = 1f;
     private readonly Vector3 initialRotation = new Vector3(0f, 0f, 0f);
     
-    private const float FORWARD_SPEED = 25f;
+    private const float FORWARD_SPEED = 20f;
     private const float ZERO_VELOCITY_ERROR_MARGIN = 0.01f;
 
     private readonly Vector3 slideRotation = new Vector3(-80f, 0f, 0f);

@@ -5,8 +5,7 @@ using System;
 
 public class ObjectPooler : MonoBehaviour
 {
-    [Serializable]
-    public class Pool
+    [Serializable] public class Pool
     {
         public objectTag tag;
         public GameObject prefab;
@@ -71,5 +70,10 @@ public class ObjectPooler : MonoBehaviour
         objectToSpawn.transform.rotation = rotation;
 
         poolDictionary[tag].Enqueue(objectToSpawn);
+    }
+
+    public void DeactivateSpawnedObject(GameObject gameObject)
+    {
+        gameObject.SetActive(false);
     }
 }

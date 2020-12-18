@@ -18,14 +18,14 @@ public class FloorSpawn : MonoBehaviour
     private float streetZSize;
     private float crosswalkZSize;
     private Vector3 grassSize;
-    private const float SPAWN_OFFSET = 5f;
+    private const float SPAWN_OFFSET = 15f;
     private readonly Vector3 streetLampSpawnDistance = new Vector3(0f, 0f, 35f);
     private readonly Vector3 benchStreetLampDistance = new Vector3(0f, 0f, 1f);
     private const int STREET_LAMP_LIST_SIZE = 2 * 5;
     private const int BENCH_LIST_SIZE = 2 * STREET_LAMP_LIST_SIZE;
 
     private const int STREET_LIST_SIZE = 10;
-    private const int ALIGNED_GRASS_COUNT = 7;
+    private const int ALIGNED_GRASS_COUNT = 3;
     private const int GRASS_LIST_SIZE = ALIGNED_GRASS_COUNT * 10;
     private int benchListIndex = 0;
     private int streetListIndex = 0;

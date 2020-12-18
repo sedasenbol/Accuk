@@ -1,5 +1,49 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &505672366
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 505672367}
+  - component: {fileID: 505672368}
+  m_Layer: 8
+  m_Name: Collider
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &505672367
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 505672366}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 5886752881649717610}
+  m_RootOrder: 5
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &505672368
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 505672366}
+  m_Material: {fileID: 13400000, guid: 63f4e813a350e844a9dd04450609ff4b, type: 2}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1.9061515, y: 0.2, z: 1.996192}
+  m_Center: {x: 0.019964337, y: 0, z: 0.02140379}
 --- !u!1 &1105734421570931374
 GameObject:
   m_ObjectHideFlags: 0
@@ -9,12 +53,12 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5463973658566988102}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Crosswalk (4)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 4294967295
   m_IsActive: 1
 --- !u!4 &5463973658566988102
 Transform:
@@ -48,7 +92,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 4294967295
   m_IsActive: 1
 --- !u!4 &1350265580118132629
 Transform:
@@ -139,12 +183,14 @@ GameObject:
   - component: {fileID: 2289708005171405973}
   - component: {fileID: 3764590551607758544}
   - component: {fileID: 1430218862948720152}
-  m_Layer: 0
+  - component: {fileID: 4535330698354062112}
+  - component: {fileID: 8743914113474479592}
+  m_Layer: 8
   m_Name: street
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 4294967295
   m_IsActive: 1
 --- !u!4 &1902258412667957209
 Transform:
@@ -218,11 +264,40 @@ MeshCollider:
   m_GameObject: {fileID: 1851855565653399665}
   m_Material: {fileID: 0}
   m_IsTrigger: 0
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 4
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: 4300000, guid: 72e65272e9752d842a914dd27fd86306, type: 3}
+--- !u!54 &4535330698354062112
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1851855565653399665}
+  serializedVersion: 2
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_UseGravity: 1
+  m_IsKinematic: 1
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
+--- !u!65 &8743914113474479592
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1851855565653399665}
+  m_Material: {fileID: 13400000, guid: 63f4e813a350e844a9dd04450609ff4b, type: 2}
+  m_IsTrigger: 0
+  m_Enabled: 0
+  serializedVersion: 2
+  m_Size: {x: 0.019999998, y: 0.020000005, z: 0.002}
+  m_Center: {x: -7.4505807e-10, y: 5.9604655e-11, z: -0.00005}
 --- !u!1 &3312678285494849016
 GameObject:
   m_ObjectHideFlags: 0
@@ -232,12 +307,12 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3770184381032318452}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Crosswalk (5)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 4294967295
   m_IsActive: 1
 --- !u!4 &3770184381032318452
 Transform:
@@ -263,12 +338,12 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5886752881649717610}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Crosswalk
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 4294967295
   m_IsActive: 1
 --- !u!4 &5886752881649717610
 Transform:
@@ -286,6 +361,7 @@ Transform:
   - {fileID: 9057594395145575849}
   - {fileID: 1350265580118132629}
   - {fileID: 6799189290582085675}
+  - {fileID: 505672367}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -301,12 +377,14 @@ GameObject:
   - component: {fileID: 4137322677783093020}
   - component: {fileID: 1853145688075923706}
   - component: {fileID: 4215811137962781847}
-  m_Layer: 0
+  - component: {fileID: 2538267135941280695}
+  - component: {fileID: 4309170812936508945}
+  m_Layer: 8
   m_Name: street
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 4294967295
   m_IsActive: 1
 --- !u!4 &1342985562541772293
 Transform:
@@ -316,7 +394,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5422462318091161058}
   m_LocalRotation: {x: -0.7071068, y: 0, z: 0, w: 0.7071068}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0.0001, z: 0}
   m_LocalScale: {x: 200, y: 200, z: 100}
   m_Children: []
   m_Father: {fileID: 3770184381032318452}
@@ -380,11 +458,40 @@ MeshCollider:
   m_GameObject: {fileID: 5422462318091161058}
   m_Material: {fileID: 0}
   m_IsTrigger: 0
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 4
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: 4300000, guid: 72e65272e9752d842a914dd27fd86306, type: 3}
+--- !u!65 &2538267135941280695
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5422462318091161058}
+  m_Material: {fileID: 13400000, guid: 63f4e813a350e844a9dd04450609ff4b, type: 2}
+  m_IsTrigger: 0
+  m_Enabled: 0
+  serializedVersion: 2
+  m_Size: {x: 0.019999998, y: 0.020000005, z: 0.002}
+  m_Center: {x: 0.0000000018626451, y: 0, z: -0.00005}
+--- !u!54 &4309170812936508945
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5422462318091161058}
+  serializedVersion: 2
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_UseGravity: 1
+  m_IsKinematic: 1
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
 --- !u!1 &5630358741764244081
 GameObject:
   m_ObjectHideFlags: 0
@@ -397,12 +504,14 @@ GameObject:
   - component: {fileID: 6137380213442778647}
   - component: {fileID: 29473247094858458}
   - component: {fileID: 2358347916933584577}
-  m_Layer: 0
+  - component: {fileID: 1422205679259861244}
+  - component: {fileID: 7264151356375768829}
+  m_Layer: 8
   m_Name: street
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 4294967295
   m_IsActive: 1
 --- !u!4 &4456752306002761563
 Transform:
@@ -412,7 +521,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5630358741764244081}
   m_LocalRotation: {x: -0.7071068, y: 0, z: 0, w: 0.7071068}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0.0002, z: 0}
   m_LocalScale: {x: 200, y: 200, z: 100}
   m_Children: []
   m_Father: {fileID: 9057594395145575849}
@@ -476,11 +585,40 @@ MeshCollider:
   m_GameObject: {fileID: 5630358741764244081}
   m_Material: {fileID: 0}
   m_IsTrigger: 0
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 4
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: 4300000, guid: 72e65272e9752d842a914dd27fd86306, type: 3}
+--- !u!65 &1422205679259861244
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5630358741764244081}
+  m_Material: {fileID: 13400000, guid: 63f4e813a350e844a9dd04450609ff4b, type: 2}
+  m_IsTrigger: 0
+  m_Enabled: 0
+  serializedVersion: 2
+  m_Size: {x: 0.019999998, y: 0.020000005, z: 0.002}
+  m_Center: {x: -0.0000000018626451, y: 0, z: -0.00005}
+--- !u!54 &7264151356375768829
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5630358741764244081}
+  serializedVersion: 2
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_UseGravity: 1
+  m_IsKinematic: 1
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
 --- !u!1 &6805615752743818580
 GameObject:
   m_ObjectHideFlags: 0
@@ -498,7 +636,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 4294967295
   m_IsActive: 1
 --- !u!4 &6799189290582085675
 Transform:
@@ -586,12 +724,12 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 9057594395145575849}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Crosswalk (6)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 4294967295
   m_IsActive: 1
 --- !u!4 &9057594395145575849
 Transform:

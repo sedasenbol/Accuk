@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System;
+using System.Linq;
 
 public class ObjectPooler : MonoBehaviour
 {
@@ -19,10 +20,12 @@ public class ObjectPooler : MonoBehaviour
         building2,
         building3,
         building4,
-        street,
-        grass,
-        streetLamp,
-        bench,
+        bus,
+        movingBus,
+        busWRamp,
+        stopSign,
+        warningStand,
+        lowWarningStand,
     }
 
     public List<Pool> pools;
@@ -57,7 +60,25 @@ public class ObjectPooler : MonoBehaviour
             }
 
             poolDictionary.Add(pool.tag, objectPool);
-            zSizes.Add(pool.tag, pool.prefab.GetComponent<Renderer>().bounds.size.z);
+
+            if (pool.prefab.GetComponent<Renderer>())
+            {
+                zSizes.Add(pool.tag, pool.prefab.GetComponent<Renderer>().bounds.size.z);
+            }
+            else if (pool.tag == objectTag.busWRamp)
+            {
+                float totalZLength = pool.prefab.transform.GetChild(0).GetChild(0).GetComponent<Renderer>().bounds.size.z + pool.prefab.transform.GetChild(1).GetChild(0).GetChild(0).GetComponent<Renderer>().bounds.size.z;
+                zSizes.Add(pool.tag, totalZLength);
+            }
+            else
+            {
+                List<float> rendererZLengths = new List<float>();
+                foreach (Renderer renderer in pool.prefab.GetComponentsInChildren<Renderer>())
+                {
+                    rendererZLengths.Add(renderer.bounds.size.z);
+                }
+                zSizes.Add(pool.tag, rendererZLengths.Max());
+            }
         }
     }
 

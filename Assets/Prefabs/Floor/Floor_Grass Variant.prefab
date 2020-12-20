@@ -24,6 +24,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Floor_Grass Variant
       objectReference: {fileID: 0}
+    - target: {fileID: 1601105362641560, guid: 4e43cdca195a1664d966791f28202d31, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 4294967295
+      objectReference: {fileID: 0}
     - target: {fileID: 4557539474977832, guid: 4e43cdca195a1664d966791f28202d31, type: 3}
       propertyPath: m_RootOrder
       value: 0

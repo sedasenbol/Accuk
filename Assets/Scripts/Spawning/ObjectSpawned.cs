@@ -5,7 +5,7 @@ using UnityEngine;
 public class ObjectSpawned : MonoBehaviour
 {
     private Transform playerTransform;
-    ObjectPooler objectPooler = ObjectPooler.Instance;
+    ObjectPooler objectPooler;
     private const float SPAWN_OFFSET = 5f;
 
     private void OnLeftBehindThePlayer()
@@ -19,6 +19,8 @@ public class ObjectSpawned : MonoBehaviour
     private void Start()
     {
         playerTransform = GameObject.Find("Player").transform;
+
+        objectPooler = ObjectPooler.Instance;
     }
 
     private void Update()

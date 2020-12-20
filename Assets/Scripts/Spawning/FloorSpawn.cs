@@ -18,19 +18,20 @@ public class FloorSpawn : MonoBehaviour
     private float streetZSize;
     private float crosswalkZSize;
     private Vector3 grassSize;
-    private const float SPAWN_OFFSET = 15f;
+    private const float SPAWN_OFFSET = 5f;
     private readonly Vector3 streetLampSpawnDistance = new Vector3(0f, 0f, 35f);
     private readonly Vector3 benchStreetLampDistance = new Vector3(0f, 0f, 1f);
+    private readonly Vector3 benchHeight = new Vector3(0f, 0.25f, 0f);
     private const int STREET_LAMP_LIST_SIZE = 2 * 5;
     private const int BENCH_LIST_SIZE = 2 * STREET_LAMP_LIST_SIZE;
 
-    private const int STREET_LIST_SIZE = 10;
+    private const int STREET_LIST_SIZE = 16;
     private const int ALIGNED_GRASS_COUNT = 3;
-    private const int GRASS_LIST_SIZE = ALIGNED_GRASS_COUNT * 10;
+    private const int GRASS_LIST_SIZE = ALIGNED_GRASS_COUNT * 16;
     private int benchListIndex = 0;
     private int streetListIndex = 0;
     private int grassListIndex = 0;
-    private int streetLampIndex = 0;
+    private int streetLampListIndex = 0;
 
     private List<Transform> streetList = new List<Transform>();
     private List<Transform> grassList = new List<Transform>();
@@ -69,10 +70,10 @@ public class FloorSpawn : MonoBehaviour
         {
             streetLampList.Add(Instantiate(streetLampPrefab, leftStreetLampSpawnPos + i * streetLampSpawnDistance, leftStreetLampRotation, streetLampContainer));
             streetLampList.Add(Instantiate(streetLampPrefab, rightStreetLampSpawnPos + i * streetLampSpawnDistance, rightStreetLampRotation, streetLampContainer));
-            benchList.Add(Instantiate(benchPrefab, leftStreetLampSpawnPos + i * streetLampSpawnDistance - benchStreetLampDistance, leftBenchRotation, benchContainer));
-            benchList.Add(Instantiate(benchPrefab, leftStreetLampSpawnPos + i * streetLampSpawnDistance + benchStreetLampDistance, leftBenchRotation, benchContainer));
-            benchList.Add(Instantiate(benchPrefab, leftStreetLampSpawnPos + i * streetLampSpawnDistance - benchStreetLampDistance, rightBenchRotation, benchContainer));
-            benchList.Add(Instantiate(benchPrefab, leftStreetLampSpawnPos + i * streetLampSpawnDistance + benchStreetLampDistance, rightBenchRotation, benchContainer));
+            benchList.Add(Instantiate(benchPrefab, leftStreetLampSpawnPos + i * streetLampSpawnDistance + benchHeight - benchStreetLampDistance, leftBenchRotation, benchContainer));
+            benchList.Add(Instantiate(benchPrefab, leftStreetLampSpawnPos + i * streetLampSpawnDistance + benchHeight + benchStreetLampDistance, leftBenchRotation, benchContainer));
+            benchList.Add(Instantiate(benchPrefab, rightStreetLampSpawnPos + i * streetLampSpawnDistance + benchHeight - benchStreetLampDistance, rightBenchRotation, benchContainer));
+            benchList.Add(Instantiate(benchPrefab, rightStreetLampSpawnPos + i * streetLampSpawnDistance + benchHeight + benchStreetLampDistance, rightBenchRotation, benchContainer));
         }
     }
 
@@ -115,12 +116,24 @@ public class FloorSpawn : MonoBehaviour
 
     private void ChangeStreetLampPositions()
     {
-        if (playerTransform.position.z < streetLampList[streetLampIndex].position.z + SPAWN_OFFSET) { return; }
+        if (playerTransform.position.z < streetLampList[streetLampListIndex].position.z + SPAWN_OFFSET) { return; }
 
-        streetLampList[streetLampIndex].position += streetLampSpawnDistance * (STREET_LAMP_LIST_SIZE / 2 - 1);
-        streetLampList[streetLampIndex + 1].position += streetLampSpawnDistance * (STREET_LAMP_LIST_SIZE / 2 - 1);
+        streetLampList[streetLampListIndex].position += streetLampSpawnDistance * (STREET_LAMP_LIST_SIZE / 2);
+        streetLampList[streetLampListIndex + 1].position += streetLampSpawnDistance * (STREET_LAMP_LIST_SIZE / 2);
 
-        streetLampIndex = (streetLampIndex += 2) % STREET_LAMP_LIST_SIZE;
+        streetLampListIndex = (streetLampListIndex += 2) % STREET_LAMP_LIST_SIZE;
+    }
+
+    private void ChangeBenchPositions()
+    {
+        if (playerTransform.position.z < benchList[benchListIndex].position.z + SPAWN_OFFSET) { return; }
+
+        benchList[benchListIndex].position += streetLampSpawnDistance * (BENCH_LIST_SIZE / 4);
+        benchList[benchListIndex + 1].position += streetLampSpawnDistance * (BENCH_LIST_SIZE / 4);
+        benchList[benchListIndex + 2].position += streetLampSpawnDistance * (BENCH_LIST_SIZE / 4);
+        benchList[benchListIndex + 3].position += streetLampSpawnDistance * (BENCH_LIST_SIZE / 4);
+
+        benchListIndex = (benchListIndex + 4) % BENCH_LIST_SIZE;
     }
 
     private void Start()
@@ -137,5 +150,6 @@ public class FloorSpawn : MonoBehaviour
         ChangeStreetPositions();
         ChangeGrassPositions();
         ChangeStreetLampPositions();
+        ChangeBenchPositions();
     }
 }

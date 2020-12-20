@@ -12,20 +12,23 @@ public class Player : MonoBehaviour
     private const float INITIAL_ROTATION_TIME = 1f;
     private readonly Vector3 initialRotation = new Vector3(0f, 0f, 0f);
     
-    private const float FORWARD_SPEED = 20f;
-    private const float ZERO_VELOCITY_ERROR_MARGIN = 0.01f;
+    private const float FORWARD_SPEED = 5f;
+    private const float ZERO_VELOCITY_ERROR = 0.01f;
 
     private readonly Vector3 slideRotation = new Vector3(-80f, 0f, 0f);
     private const float SLIDING_TIME = 0.5f;
 
-    private const float LANE_SWITCH_TIME = 0.5f;
+    private const float LANE_SWITCH_TIME = 0.25f;
     private const float LANE_WIDTH = 0.65f;
     private const float LANE_ERROR_MARGIN = 0.01f;
     private readonly Vector3 switchLaneRotation = new Vector3(0f, 0f, 20f);
 
-    private readonly Vector3 jumpForce = new Vector3(0f, 3f, 0f);
+    private readonly Vector3 jumpForce = new Vector3(0f, 75f, 0f);
     private readonly Vector3 highJumpForce = new Vector3(0f, 5f, 0f);
     private readonly Vector3 pullDownForce = new Vector3(0f, -10f, 0f);
+    private readonly Vector3 jumpGravity = new Vector3(0f, -9.81f, 0f);
+    private readonly Vector3 normalGravity = new Vector3(0f, -100f, 0f);
+    private Vector3 deathPos;
     private const float JUMP_ROTATION_TIME = 0.5f;
     private const int JUMP_ROTATION_RANDOM_COUNT = 2;
     private readonly Vector3 jumpRotationX = new Vector3(360f, 0f, 0f);
@@ -34,6 +37,8 @@ public class Player : MonoBehaviour
     private const float DEATH_ROTATION_TIME = 1f;
     private readonly Vector3 deathXRotation = new Vector3(-90f, 0f, 0f);
     private const float MAX_DEATH_Y_ROTATION = 30f;
+
+    private Quaternion rampRotation = Quaternion.Euler(-62f, 0f, 0f);
 
     private Rigidbody rb;
     private Animator anim;
@@ -45,6 +50,7 @@ public class Player : MonoBehaviour
     private bool isSliding = false;
     private bool isSwitchingLanes = false;
     private bool isGrounded = true;
+    private bool isOnSlope = false;
     private Lane lane = Lane.Middle;
     private enum Lane
     {
@@ -56,7 +62,18 @@ public class Player : MonoBehaviour
 
     private void MoveForward()
     {
-        rb.velocity = new Vector3(rb.velocity.x, rb.velocity.y, FORWARD_SPEED);
+        if (!isOnSlope & !isJumping)
+        {
+            rb.velocity = new Vector3(rb.velocity.x, 0, FORWARD_SPEED);
+        }
+        else if (isJumping)
+        {
+            rb.velocity = new Vector3(rb.velocity.x, rb.velocity.y, FORWARD_SPEED);
+        }
+        else
+        {
+            rb.velocity = new Vector3(rb.velocity.x, FORWARD_SPEED * -Mathf.Sin(rampRotation.x), FORWARD_SPEED * Mathf.Cos(rampRotation.x));
+        }
     }
 
     private void DetermineDragDirection(PointerEventData eventData)
@@ -166,8 +183,9 @@ public class Player : MonoBehaviour
     private void Jump()
     {
         if (!isGrounded || isSliding || isRotating || isJumping) { return; }
-
         isJumping = true;
+
+        Physics.gravity = jumpGravity;
 
         /*rb.useGravity = false;
         Sequence sequence = DOTween.Sequence();
@@ -187,10 +205,10 @@ public class Player : MonoBehaviour
 
     private void RotateWhileJumping()
     {
-        if (rb.position.y < 1f || isJumping == false) { return; }
+        if (rb.position.y < 0.75f && !highJumpPowerUp ) { return; }
+        if (rb.position.y < 1.2f && highJumpPowerUp) { return; }
 
-        int randomJumpRotation = UnityEngine.Random.Range(0, 5);// JUMP_ROTATION_RANDOM_COUNT);
-        Debug.Log(randomJumpRotation);
+        int randomJumpRotation = 1;// UnityEngine.Random.Range(0, 2);// JUMP_ROTATION_RANDOM_COUNT);
         switch (randomJumpRotation)
         {
             case 0:
@@ -231,6 +249,7 @@ public class Player : MonoBehaviour
 
         Sequence sequence = DOTween.Sequence();
         sequence.Append(rb.DORotate(slideRotation, SLIDING_TIME));
+        sequence.AppendInterval(0.5f);
         sequence.Append(rb.DORotate(initialRotation, SLIDING_TIME));
         sequence.SetEase(Ease.Linear);
         sequence.OnComplete(() => 
@@ -264,14 +283,21 @@ public class Player : MonoBehaviour
         float randomYRotation = UnityEngine.Random.Range(-MAX_DEATH_Y_ROTATION, MAX_DEATH_Y_ROTATION);
         Vector3 deathRotation = deathXRotation + new Vector3(0f, randomYRotation, 0f);
         rb.DORotate(deathRotation, DEATH_ROTATION_TIME);
+        rb.velocity = new Vector3(0f, 0f, 0f);
+        deathPos = rb.position;
         
         OnPlayerDeath?.Invoke();
+    }
+
+    private void StandStill()
+    {
+        rb.position = new Vector3(deathPos.x, rb.position.y, deathPos.z);
     }
 
     private bool CheckZeroVelocity()
     {
         float forwardVelocity = rb.velocity.z;
-        if (forwardVelocity > - ZERO_VELOCITY_ERROR_MARGIN && forwardVelocity < ZERO_VELOCITY_ERROR_MARGIN)
+        if (forwardVelocity < ZERO_VELOCITY_ERROR && !isSliding)
         {
             return true;
         }
@@ -280,38 +306,38 @@ public class Player : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
-        if (collision.gameObject.layer == 8)
+        if (new List<int> {8, 9, 11}.Contains(collision.gameObject.layer))
         {
             isGrounded = true;
             isJumping = false;
+            Physics.gravity = normalGravity;
             anim.SetBool("isJumping", false);
         }
-        else if (collision.gameObject.layer == 9)
+        if (collision.gameObject.layer == 9)
         {
-            isGrounded = true;
-            isJumping = false;
-            anim.SetBool("isJumping", false);
+            isOnSlope = true;
         }
     }
 
     private void OnCollisionStay(Collision collision)
     {
-        if (collision.gameObject.layer == 8)
+        if (new List<int> { 8, 9, 11}.Contains(collision.gameObject.layer))
         {
             isGrounded = true;
-        }
-        else if (collision.gameObject.layer == 9 && CheckZeroVelocity())
-        {
-            Die();
         }
     }
 
     private void OnCollisionExit(Collision collision)
     {
-        if (collision.gameObject.layer == 8)
+        if (new List<int> { 8, 9, 11}.Contains(collision.gameObject.layer))
         {
             isGrounded = false;
         }
+        if (collision.gameObject.layer == 9)
+        {
+            isOnSlope = false;
+        }
+
     }
 
     private void OnEnable()
@@ -335,10 +361,23 @@ public class Player : MonoBehaviour
     private void Update()
     {
         if (!isAlive) { return; }
-        MoveForward();
-        if (isJumping && highJumpPowerUp && !isRotating)
+        if (isJumping && !isRotating)
         {
             RotateWhileJumping();
         }
+        if (CheckZeroVelocity())
+        {
+            Die();
+        }
+    }
+
+    private void FixedUpdate()
+    {
+        if (!isAlive) 
+        {
+            StandStill();
+            return; 
+        }
+        MoveForward();
     }
 }

@@ -12,7 +12,7 @@ public class Player : MonoBehaviour
     private const float INITIAL_ROTATION_TIME = 1f;
     private readonly Vector3 initialRotation = new Vector3(0f, 0f, 0f);
     
-    private const float FORWARD_SPEED = 5f;
+    private const float FORWARD_SPEED = 7f;
     private const float ZERO_VELOCITY_ERROR = 0.01f;
 
     private readonly Vector3 slideRotation = new Vector3(-80f, 0f, 0f);
@@ -28,9 +28,7 @@ public class Player : MonoBehaviour
     private readonly Vector3 pullDownForce = new Vector3(0f, -10f, 0f);
     private readonly Vector3 jumpGravity = new Vector3(0f, -9.81f, 0f);
     private readonly Vector3 normalGravity = new Vector3(0f, -100f, 0f);
-    private Vector3 deathPos;
     private const float JUMP_ROTATION_TIME = 0.5f;
-    private const int JUMP_ROTATION_RANDOM_COUNT = 2;
     private readonly Vector3 jumpRotationX = new Vector3(360f, 0f, 0f);
     private readonly Vector3 jumpRotationY = new Vector3(0f, 360f, 0f);
 
@@ -51,6 +49,7 @@ public class Player : MonoBehaviour
     private bool isSwitchingLanes = false;
     private bool isGrounded = true;
     private bool isOnSlope = false;
+    private bool isTouchingBusOrTraffic = false;
     private Lane lane = Lane.Middle;
     private enum Lane
     {
@@ -72,7 +71,7 @@ public class Player : MonoBehaviour
         }
         else
         {
-            rb.velocity = new Vector3(rb.velocity.x, FORWARD_SPEED * -Mathf.Sin(rampRotation.x), FORWARD_SPEED * Mathf.Cos(rampRotation.x));
+            rb.velocity = new Vector3(rb.velocity.x, FORWARD_SPEED * -Mathf.Sin(rampRotation.x) / Mathf.Cos(rampRotation.x), FORWARD_SPEED);
         }
     }
 
@@ -102,7 +101,7 @@ public class Player : MonoBehaviour
     
     private void SwitchLane(bool isRight)
     {
-        if (isSwitchingLanes || isSliding) { return; }
+        if (isSwitchingLanes) { return; }
 
         float xPosition = rb.position.x;
 
@@ -112,10 +111,16 @@ public class Player : MonoBehaviour
 
         if (finalXPosition != xPosition)
         {
+            rb.constraints &= ~RigidbodyConstraints.FreezePositionX;
+
             if (isRotating) 
             {
                 isSwitchingLanes = true;
-                rb.DOMoveX(finalXPosition, LANE_SWITCH_TIME).OnComplete(()=> isSwitchingLanes = false); 
+                rb.DOMoveX(finalXPosition, LANE_SWITCH_TIME).OnComplete(()=> 
+                {
+                    isSwitchingLanes = false;
+                    rb.constraints |= RigidbodyConstraints.FreezePositionX;
+                }); 
                 return; 
             }
 
@@ -132,6 +137,7 @@ public class Player : MonoBehaviour
             {
                 isSwitchingLanes = false;
                 isRotating = false;
+                rb.constraints |= RigidbodyConstraints.FreezePositionX;
             });
         }
 
@@ -159,10 +165,12 @@ public class Player : MonoBehaviour
         {
             if (lane == Lane.Left)
             {
+                lane = Lane.Middle;
                 return 0;
             }
             else if (lane == Lane.Middle)
             {
+                lane = Lane.Right;
                 return LANE_WIDTH;
             }
         }
@@ -170,10 +178,12 @@ public class Player : MonoBehaviour
         {
             if (lane == Lane.Right)
             {
+                lane = Lane.Middle;
                 return 0;
             }
             else if (lane == Lane.Middle)
             {
+                lane = Lane.Left;
                 return -LANE_WIDTH;
             }
         }
@@ -240,7 +250,7 @@ public class Player : MonoBehaviour
 
     private void Slide()
     {
-        if (isSliding || isJumping || isRotating || !isGrounded) { return; }
+        if (isJumping || !isGrounded) { return; }
 
         isSliding = true;
         isRotating = true;
@@ -249,7 +259,7 @@ public class Player : MonoBehaviour
 
         Sequence sequence = DOTween.Sequence();
         sequence.Append(rb.DORotate(slideRotation, SLIDING_TIME));
-        sequence.AppendInterval(0.5f);
+        sequence.AppendInterval(0.15f);
         sequence.Append(rb.DORotate(initialRotation, SLIDING_TIME));
         sequence.SetEase(Ease.Linear);
         sequence.OnComplete(() => 
@@ -282,22 +292,16 @@ public class Player : MonoBehaviour
         DOTween.KillAll();
         float randomYRotation = UnityEngine.Random.Range(-MAX_DEATH_Y_ROTATION, MAX_DEATH_Y_ROTATION);
         Vector3 deathRotation = deathXRotation + new Vector3(0f, randomYRotation, 0f);
-        rb.DORotate(deathRotation, DEATH_ROTATION_TIME);
-        rb.velocity = new Vector3(0f, 0f, 0f);
-        deathPos = rb.position;
+        rb.DORotate(deathRotation, DEATH_ROTATION_TIME).OnComplete(()=> rb.constraints |= RigidbodyConstraints.FreezePositionY);
+        rb.constraints |= RigidbodyConstraints.FreezePositionX | RigidbodyConstraints.FreezePositionZ;
         
         OnPlayerDeath?.Invoke();
-    }
-
-    private void StandStill()
-    {
-        rb.position = new Vector3(deathPos.x, rb.position.y, deathPos.z);
     }
 
     private bool CheckZeroVelocity()
     {
         float forwardVelocity = rb.velocity.z;
-        if (forwardVelocity < ZERO_VELOCITY_ERROR && !isSliding)
+        if (forwardVelocity < ZERO_VELOCITY_ERROR && isTouchingBusOrTraffic)
         {
             return true;
         }
@@ -324,6 +328,10 @@ public class Player : MonoBehaviour
         if (new List<int> { 8, 9, 11}.Contains(collision.gameObject.layer))
         {
             isGrounded = true;
+        }
+        if (new List<int> { 9, 11, 13}.Contains(collision.gameObject.layer))
+        {
+            isTouchingBusOrTraffic = true;
         }
     }
 
@@ -373,11 +381,7 @@ public class Player : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (!isAlive) 
-        {
-            StandStill();
-            return; 
-        }
+        if (!isAlive) { return; }
         MoveForward();
     }
 }

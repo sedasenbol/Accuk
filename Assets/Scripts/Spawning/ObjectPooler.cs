@@ -26,6 +26,10 @@ public class ObjectPooler : MonoBehaviour
         stopSign,
         warningStand,
         lowWarningStand,
+        coin,
+        redMagnetPowerUp,
+        greenHighJumpPowerUp,
+        blueFlyingPowerUp,
     }
 
     public List<Pool> pools;
@@ -82,13 +86,15 @@ public class ObjectPooler : MonoBehaviour
         }
     }
 
-    public void SpawnFromPool(objectTag tag, Vector3 position, Quaternion rotation)
+    public void SpawnFromPool(objectTag tag, Vector3 position, Quaternion rotation, string name = null)
     {
-        GameObject objectToSpawn = poolDictionary[tag].Dequeue();
+        if (poolDictionary[tag].Peek().activeInHierarchy == true) { return; }
 
+        GameObject objectToSpawn = poolDictionary[tag].Dequeue();
         objectToSpawn.SetActive(true);
         objectToSpawn.transform.position = position;
         objectToSpawn.transform.rotation = rotation;
+        if (name != null) { objectToSpawn.name = name; }
 
         poolDictionary[tag].Enqueue(objectToSpawn);
     }

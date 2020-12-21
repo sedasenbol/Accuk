@@ -7,7 +7,7 @@ public class CameraFollow : MonoBehaviour
 {
     private Transform targetTransform;
     private Transform xform;
-    private Vector3 offset = new Vector3(0f,3f,-2.5f);
+    private Vector3 offset = new Vector3(0f,3f,-2f);
     private Camera cam;
 
     private void FollowTarget()

@@ -8,20 +8,26 @@ public class OnStreetSpawn : MonoBehaviour
     private ObjectPooler objectPooler;
     private List<Vector3> spawnPositions = new List<Vector3> { new Vector3(-0.65f, 0f, 0f), new Vector3(0f, 0f, 0f), new Vector3(0.65f, 0f, 0f) };
     private List<Vector3> stopSignSpawnPositions = new List<Vector3> { new Vector3(-0.335f, 0f, 0f), new Vector3(0.335f, 0f, 0f) };
-    private float SPAWN_LENGTH = 70;
+    private float SPAWN_LENGTH = 100;
     private List<Side> unusedSides = new List<Side> { Side.left, Side.middle, Side.right };
     private readonly List<Side> allSides = new List<Side> { Side.left, Side.middle, Side.right };
     private float busLength;
-    private float playerForwardSpeed = 5f;
-    private const float MOVING_BUS_SPEED = 5f;
+    private float playerForwardSpeed = 7f;
+    private const int MIN_HARD_SIDE_COUNT = 1;
+    private const int MAX_HARD_SIDE_COUNT = 2;
+    private const int MIN_HARD_SIDE_LENGTH = 2;
+    private const int MAX_HARD_SIDE_LENGTH = 8;
+    private const float MOVING_BUS_SPEED = 6f;
     private const float MIN_MOVING_BUS_SPACE = 7f;
     private const float MAX_MOVING_BUS_SPACE = 12f;
-    private const float MIN_EMPTY_STREET_DISTANCE = 10f;
-    private const float MAX_EMPTY_STREET_DISTANCE = 30f;
+    private const float MIN_EMPTY_STREET_DISTANCE = 15f;
+    private const float MAX_EMPTY_STREET_DISTANCE = 25f;
     private const float MIN_MOVING_BUS_EMPTINESS = 20f;
     private const float MIN_EASY_OBSTACLE_DISTANCE = 5f;
-    private const int EASY_OBSTACLE_INVERSE_FREQ_IN_UNUSED_SIDE = 3;
+    private const int STOP_SIGN_INVERSE_FREQ = 7;
+    private readonly Vector3 distanceBtwHardStreet = new Vector3(0f, 0f, 5f);
     private Vector3 stopSignSpawnFreq = new Vector3(0f, 0f, 5f);
+    private bool isLastSpawnHard = false;
 
     private enum Side
     {
@@ -34,31 +40,29 @@ public class OnStreetSpawn : MonoBehaviour
     {
         if (playerTransform.position.z < Mathf.Min(stopSignSpawnPositions[0].z, stopSignSpawnPositions[1].z) - SPAWN_LENGTH) { return; }
 
-        int spawnStopSign = Random.Range(0, 7);
-        if (spawnStopSign == 6)
+        int spawnStopSign = Random.Range(0, STOP_SIGN_INVERSE_FREQ);
+        if (spawnStopSign == 1)
         {
-            int stopSignSide = Random.Range(0, 2);
+            int stopSignSide = Random.Range(0, stopSignSpawnPositions.Count);
             objectPooler.SpawnFromPool(ObjectPooler.objectTag.stopSign, stopSignSpawnPositions[stopSignSide], Quaternion.identity);
         }
         stopSignSpawnPositions[0] += stopSignSpawnFreq;
     }
 
-    private void SpawnOthers()
+    private void SpawnHardStreet()
     {
-        if (playerTransform.position.z < Mathf.Min(spawnPositions[0].z, spawnPositions[1].z, spawnPositions[2].z) - SPAWN_LENGTH) { return; }
-
-        int randomHardSideCount = Random.Range(1, 3);
+        int randomHardSideCount = Random.Range(MIN_HARD_SIDE_COUNT, MAX_HARD_SIDE_COUNT + 1);
         List<Side> hardSides = new List<Side>();
         for (int i = 0; i < randomHardSideCount; i++)
         {
             AddRandomSides(hardSides);
         }
-        int randomHardSideLength = Random.Range(1, 5);
+        int randomHardSideLength = Random.Range(MIN_HARD_SIDE_LENGTH, MAX_HARD_SIDE_LENGTH + 1);
         for (int i = 0; i < randomHardSideCount; i++)
         {
-            Vector3 randomHardSideOffset = new Vector3(0f, 0f, 0f);
             for (int j = 0; j < randomHardSideLength; j++)
             {
+                Vector3 randomHardSideOffset = Vector3.zero;
                 if (j == 0)
                 {
                     randomHardSideOffset = new Vector3(0f, 0f, Random.Range(0f, 6f));
@@ -66,34 +70,43 @@ public class OnStreetSpawn : MonoBehaviour
                 int randomBusWRamp = Random.Range(0, 2);
                 if (j == 0 && randomBusWRamp == 1)
                 {
-                    objectPooler.SpawnFromPool(ObjectPooler.objectTag.busWRamp, spawnPositions[(int)hardSides[0]] + randomHardSideOffset, Quaternion.identity);
-                    spawnPositions[(int)hardSides[0]] += new Vector3(0f, 0f, busLength * 1.5f);
+                    objectPooler.SpawnFromPool(ObjectPooler.objectTag.busWRamp, spawnPositions[(int)hardSides[0]] + randomHardSideOffset, Quaternion.identity, "Bus W Ramp At The Beginning of a Hard Side");
+                    spawnPositions[(int)hardSides[0]] += new Vector3(0f, 0f, busLength * 1.5f) + randomHardSideOffset;
+                }
+                else if (j == randomHardSideLength - 1 && i == 0)
+                {
+                    int randomShorterHardSide = Random.Range(0, 2);
+                    if (randomShorterHardSide != 1)
+                    {
+                        objectPooler.SpawnFromPool(ObjectPooler.objectTag.bus, spawnPositions[(int)hardSides[0]], Quaternion.identity, "Bus Unshortened At The Hard Side");
+                    }
+                    spawnPositions[(int)hardSides[0]] += new Vector3(0f, 0f, busLength);
                 }
                 else
                 {
-                    objectPooler.SpawnFromPool(ObjectPooler.objectTag.bus, spawnPositions[(int)hardSides[0]] + randomHardSideOffset, Quaternion.identity);
+                    objectPooler.SpawnFromPool(ObjectPooler.objectTag.bus, spawnPositions[(int)hardSides[0]], Quaternion.identity, "Bus Usual At The Hard Side");
                     spawnPositions[(int)hardSides[0]] += new Vector3(0f, 0f, busLength);
                 }
             }
             unusedSides.Remove(hardSides[0]);
-            hardSides.RemoveAt(0);    
+            hardSides.RemoveAt(0);
         }
         foreach (Side side in unusedSides)
         {
-            int randomEasyObstacle = Random.Range(0, EASY_OBSTACLE_INVERSE_FREQ_IN_UNUSED_SIDE);
-            Vector3 randomObstacleOffset = new Vector3(0f, 0f, Random.Range(0f, randomHardSideLength * busLength));
-            if (randomEasyObstacle == EASY_OBSTACLE_INVERSE_FREQ_IN_UNUSED_SIDE)
-            {
-                ObjectPooler.objectTag randomObject = ConvertIntToTag(Random.Range(0, 2));
-                objectPooler.SpawnFromPool(randomObject, spawnPositions[(int)side] + randomObstacleOffset, Quaternion.identity);
-            }
-            spawnPositions[(int)side] += new Vector3(0f, 0f, randomHardSideLength * busLength); 
+            Vector3 randomObstacleOffset = new Vector3(0f, 0f, Random.Range(0f, (randomHardSideLength - 1) * busLength));
+            ObjectPooler.objectTag randomObject = ConvertIntToTag(Random.Range(0, 3));
+            objectPooler.SpawnFromPool(randomObject, spawnPositions[(int)side] + randomObstacleOffset, Quaternion.identity, "Easy Obstacle At The Unused Side");
+            spawnPositions[(int)side] += new Vector3(0f, 0f, randomHardSideLength * busLength);
         }
         unusedSides.Clear();
         unusedSides.AddRange(allSides);
         MakeSpawnPositionsEqual();
+    }
+
+    private void SpawnEmptyOrMovingBusStreet(float randomEmptyStreetDistance)
+    {
+
         float movingBusMinimumDistance = ((spawnPositions[0].z + MIN_MOVING_BUS_SPACE - playerTransform.position.z) / playerForwardSpeed) * MOVING_BUS_SPEED;
-        float randomEmptyStreetDistance = Random.Range(MIN_EMPTY_STREET_DISTANCE, MAX_EMPTY_STREET_DISTANCE);
         List<Side> movingBusSideList = new List<Side>();
         if (randomEmptyStreetDistance > MIN_MOVING_BUS_EMPTINESS)
         {
@@ -105,35 +118,55 @@ public class OnStreetSpawn : MonoBehaviour
             for (int i = 0; i < movingBusSideCount; i++)
             {
                 Vector3 spawnPos = spawnPositions[(int)movingBusSideList[i]] + new Vector3(0f, 0f, movingBusMinimumDistance + Random.Range(MIN_MOVING_BUS_SPACE, MAX_MOVING_BUS_SPACE));
-                objectPooler.SpawnFromPool(ObjectPooler.objectTag.movingBus, spawnPos, Quaternion.identity);
+                objectPooler.SpawnFromPool(ObjectPooler.objectTag.movingBus, spawnPos, Quaternion.identity, "Moving Bus");
+                unusedSides.Remove(movingBusSideList[i]);
             }
-        }
-        if (movingBusSideList.Count == 0)
-        {
-            objectPooler.SpawnFromPool(ConvertIntToTag(Random.Range(0, 2)), spawnPositions[0] + new Vector3(0f, 0f, Random.Range(MIN_EASY_OBSTACLE_DISTANCE, randomEmptyStreetDistance - MIN_EASY_OBSTACLE_DISTANCE)), Quaternion.identity);
-            objectPooler.SpawnFromPool(ConvertIntToTag(Random.Range(0, 2)), spawnPositions[1] + new Vector3(0f, 0f, Random.Range(MIN_EASY_OBSTACLE_DISTANCE, randomEmptyStreetDistance - MIN_EASY_OBSTACLE_DISTANCE)), Quaternion.identity);
-            objectPooler.SpawnFromPool(ConvertIntToTag(Random.Range(0, 2)), spawnPositions[2] + new Vector3(0f, 0f, Random.Range(MIN_EASY_OBSTACLE_DISTANCE, randomEmptyStreetDistance - MIN_EASY_OBSTACLE_DISTANCE)), Quaternion.identity);
+            for (int i = 0; i < unusedSides.Count; i++)
+            {
+                objectPooler.SpawnFromPool(ConvertIntToTag(Random.Range(0, 3)), spawnPositions[(int)unusedSides[i]] + new Vector3(0f, 0f, Random.Range(MIN_EASY_OBSTACLE_DISTANCE, randomEmptyStreetDistance - MIN_EASY_OBSTACLE_DISTANCE)), Quaternion.identity, "Easy Obstacle at The Moving Bus Unused Side");
+            }
         }
         else
         {
-            List<Side> sidesWithoutMovingBus = new List<Side>();
-            for (int i = 0; i < allSides.Count; i++)
-            {
-                if (!movingBusSideList.Contains(allSides[i]))
-                {
-                    sidesWithoutMovingBus.Add(allSides[i]);
-                }
-            }
-            foreach (Side side in sidesWithoutMovingBus)
-            {
-                objectPooler.SpawnFromPool(ConvertIntToTag(Random.Range(0, 2)), spawnPositions[(int)side] + new Vector3(0f, 0f, Random.Range(MAX_MOVING_BUS_SPACE + MIN_EASY_OBSTACLE_DISTANCE, randomEmptyStreetDistance - MIN_EASY_OBSTACLE_DISTANCE)), Quaternion.identity);
-            }
-                
+            objectPooler.SpawnFromPool(ConvertIntToTag(Random.Range(0, 3)), spawnPositions[0] + new Vector3(0f, 0f, Random.Range(MIN_EASY_OBSTACLE_DISTANCE, randomEmptyStreetDistance - MIN_EASY_OBSTACLE_DISTANCE)), Quaternion.identity, "Empty Street Easy Obstacle");
+            objectPooler.SpawnFromPool(ConvertIntToTag(Random.Range(0, 3)), spawnPositions[1] + new Vector3(0f, 0f, Random.Range(MIN_EASY_OBSTACLE_DISTANCE, randomEmptyStreetDistance - MIN_EASY_OBSTACLE_DISTANCE)), Quaternion.identity, "Empty Street Easy Obstacle");
+            objectPooler.SpawnFromPool(ConvertIntToTag(Random.Range(0, 3)), spawnPositions[2] + new Vector3(0f, 0f, Random.Range(MIN_EASY_OBSTACLE_DISTANCE, randomEmptyStreetDistance - MIN_EASY_OBSTACLE_DISTANCE)), Quaternion.identity, "Empty Street Easy Obstacle");
         }
-        for (int i= 0; i < spawnPositions.Count; i++)
+        unusedSides.Clear();
+        unusedSides.AddRange(allSides);
+        for (int i = 0; i < spawnPositions.Count; i++)
         {
             spawnPositions[i] += new Vector3(0f, 0f, randomEmptyStreetDistance);
         }
+    }
+
+    private void SpawnOthers()
+    {
+        if (playerTransform.position.z < Mathf.Min(spawnPositions[0].z, spawnPositions[1].z, spawnPositions[2].z) - SPAWN_LENGTH) { return; }
+
+        int randomStreet = Random.Range(0, 2);
+
+        if (randomStreet == 1)
+        {
+            if (isLastSpawnHard)
+            {
+                spawnPositions[0] += distanceBtwHardStreet;
+                MakeSpawnPositionsEqual();
+            }
+            SpawnHardStreet();
+            isLastSpawnHard = true;
+            return;
+        }
+        int randomStreetWMovingBus = Random.Range(0, 2);
+        if (randomStreetWMovingBus == 1)
+        {
+            SpawnEmptyOrMovingBusStreet(Random.Range(MIN_EMPTY_STREET_DISTANCE, MAX_EMPTY_STREET_DISTANCE));
+        }
+        else
+        {
+            SpawnEmptyOrMovingBusStreet(10f);
+        }
+        isLastSpawnHard = false;
     }
 
     private void MakeSpawnPositionsEqual()
@@ -174,6 +207,8 @@ public class OnStreetSpawn : MonoBehaviour
                 return ObjectPooler.objectTag.lowWarningStand;
             case 1:
                 return ObjectPooler.objectTag.warningStand;
+            case 2:
+                return ObjectPooler.objectTag.busWRamp;
             default:
                 return ObjectPooler.objectTag.lowWarningStand;
         }

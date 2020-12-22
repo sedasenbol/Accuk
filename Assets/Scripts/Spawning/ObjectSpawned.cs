@@ -5,12 +5,13 @@ using UnityEngine;
 public class ObjectSpawned : MonoBehaviour
 {
     private Transform playerTransform;
+    private Transform xform;
     ObjectPooler objectPooler;
     private const float SPAWN_OFFSET = 5f;
 
     private void OnLeftBehindThePlayer()
     {
-        if (playerTransform.position.z < transform.position.z + SPAWN_OFFSET) { return; }
+        if (playerTransform.position.z < xform.position.z + SPAWN_OFFSET) { return; }
 
         objectPooler.DeactivateSpawnedObject(this.gameObject);
         
@@ -19,6 +20,7 @@ public class ObjectSpawned : MonoBehaviour
     private void Start()
     {
         playerTransform = GameObject.Find("Player").transform;
+        xform = GetComponent<Transform>();
 
         objectPooler = ObjectPooler.Instance;
     }

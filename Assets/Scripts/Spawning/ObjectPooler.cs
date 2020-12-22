@@ -30,6 +30,7 @@ public class ObjectPooler : MonoBehaviour
         redMagnetPowerUp,
         greenHighJumpPowerUp,
         blueFlyingPowerUp,
+        empty,
     }
 
     public List<Pool> pools;
@@ -86,10 +87,8 @@ public class ObjectPooler : MonoBehaviour
         }
     }
 
-    public void SpawnFromPool(objectTag tag, Vector3 position, Quaternion rotation, string name = null)
+    public GameObject SpawnFromPool(objectTag tag, Vector3 position, Quaternion rotation, string name = null)
     {
-        if (poolDictionary[tag].Peek().activeInHierarchy == true) { return; }
-
         GameObject objectToSpawn = poolDictionary[tag].Dequeue();
         objectToSpawn.SetActive(true);
         objectToSpawn.transform.position = position;
@@ -97,6 +96,7 @@ public class ObjectPooler : MonoBehaviour
         if (name != null) { objectToSpawn.name = name; }
 
         poolDictionary[tag].Enqueue(objectToSpawn);
+        return objectToSpawn;
     }
 
     public void DeactivateSpawnedObject(GameObject gameObject)

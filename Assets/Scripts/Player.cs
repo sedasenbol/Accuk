@@ -49,7 +49,6 @@ public class Player : MonoBehaviour
     private bool isSwitchingLanes = false;
     private bool isGrounded = true;
     private bool isOnSlope = false;
-    private bool isTouchingBusOrTraffic = false;
     private Lane lane = Lane.Middle;
     private enum Lane
     {
@@ -301,7 +300,7 @@ public class Player : MonoBehaviour
     private bool CheckZeroVelocity()
     {
         float forwardVelocity = rb.velocity.z;
-        if (forwardVelocity < ZERO_VELOCITY_ERROR && isTouchingBusOrTraffic)
+        if (forwardVelocity < ZERO_VELOCITY_ERROR)
         {
             return true;
         }
@@ -329,10 +328,18 @@ public class Player : MonoBehaviour
         {
             isGrounded = true;
         }
-        if (new List<int> { 9, 11, 13}.Contains(collision.gameObject.layer))
+        if (new List<int> { 9, 11}.Contains(collision.gameObject.layer))
         {
-            isTouchingBusOrTraffic = true;
+            if (CheckZeroVelocity())
+            {
+                Die();
+            }
         }
+       else if (collision.gameObject.layer == 13)
+        {
+            Die();
+        }
+        
     }
 
     private void OnCollisionExit(Collision collision)

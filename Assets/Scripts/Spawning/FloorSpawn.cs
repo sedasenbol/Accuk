@@ -25,9 +25,9 @@ public class FloorSpawn : MonoBehaviour
     private const int STREET_LAMP_LIST_SIZE = 2 * 5;
     private const int BENCH_LIST_SIZE = 2 * STREET_LAMP_LIST_SIZE;
 
-    private const int STREET_LIST_SIZE = 16;
+    private const int STREET_LIST_SIZE = 6;
     private const int ALIGNED_GRASS_COUNT = 3;
-    private const int GRASS_LIST_SIZE = ALIGNED_GRASS_COUNT * 16;
+    private const int GRASS_LIST_SIZE = ALIGNED_GRASS_COUNT * STREET_LIST_SIZE;
     private int benchListIndex = 0;
     private int streetListIndex = 0;
     private int grassListIndex = 0;

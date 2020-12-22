@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 5251489274591477026}
   - component: {fileID: 5226525494867104490}
   - component: {fileID: 5234439188140766340}
-  - component: {fileID: 5193507808789094794}
+  - component: {fileID: 7868192491025212923}
   m_Layer: 13
   m_Name: traffic_warning_stand
   m_TagString: Untagged
@@ -82,20 +82,19 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!64 &5193507808789094794
-MeshCollider:
+--- !u!65 &7868192491025212923
+BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5256746160463612610}
-  m_Material: {fileID: 13400000, guid: f47eb3a9cae650a47ac2e0eba59c3ee3, type: 2}
+  m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_Enabled: 1
-  serializedVersion: 4
-  m_Convex: 0
-  m_CookingOptions: 30
-  m_Mesh: {fileID: 4300000, guid: dff570513d335cf45b713cacfeec9873, type: 3}
+  serializedVersion: 2
+  m_Size: {x: 0.0008998606, y: 0.012254144, z: 0.003779515}
+  m_Center: {x: -0.000045195673, y: -0.0061917678, z: 0.004255807}
 --- !u!1 &5256771296192640940
 GameObject:
   m_ObjectHideFlags: 0

@@ -7,7 +7,7 @@ public class CitySpawn : MonoBehaviour
     [SerializeField] private Transform playerTransform;
 
     private const float SPAWN_OFFSET = 5f;
-    private const int INITIAL_SPAWN_COUNT = 80;
+    private const int INITIAL_SPAWN_COUNT = 30;
     private const int BUILDING_PREFAB_COUNT = 4;
     private readonly Quaternion leftBuildingRotation = Quaternion.Euler(0f, 0f, 0f);
     private readonly Quaternion rightBuildingRotation = Quaternion.Euler(0f, 180f, 0f);

@@ -10,17 +10,18 @@ public class MovingBus : MonoBehaviour
 
     private void StandStill()
     {
+        isPlayerDead = true;
         rb.constraints |= RigidbodyConstraints.FreezeAll;
     }
 
     private void OnEnable()
     {
-        Player.OnPlayerDeath += StandStill;
+        Player.OnPlayerHitTheObstacle += StandStill;
     }
 
     private void OnDisable()
     {
-        Player.OnPlayerDeath -= StandStill;
+        Player.OnPlayerHitTheObstacle -= StandStill;
     }
 
     private void Start()

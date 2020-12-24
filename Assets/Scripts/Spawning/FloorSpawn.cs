@@ -22,10 +22,10 @@ public class FloorSpawn : MonoBehaviour
     private readonly Vector3 streetLampSpawnDistance = new Vector3(0f, 0f, 35f);
     private readonly Vector3 benchStreetLampDistance = new Vector3(0f, 0f, 1f);
     private readonly Vector3 benchHeight = new Vector3(0f, 0.25f, 0f);
-    private const int STREET_LAMP_LIST_SIZE = 2 * 5;
+    private const int STREET_LAMP_LIST_SIZE = 2 * 3;
     private const int BENCH_LIST_SIZE = 2 * STREET_LAMP_LIST_SIZE;
 
-    private const int STREET_LIST_SIZE = 6;
+    private const int STREET_LIST_SIZE = 8;
     private const int ALIGNED_GRASS_COUNT = 3;
     private const int GRASS_LIST_SIZE = ALIGNED_GRASS_COUNT * STREET_LIST_SIZE;
     private int benchListIndex = 0;

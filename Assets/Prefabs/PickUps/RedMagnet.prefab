@@ -4926,7 +4926,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &4000010533823780
 Transform:
   m_ObjectHideFlags: 0
@@ -9697,6 +9697,7 @@ GameObject:
   - component: {fileID: 2415136626744291146}
   - component: {fileID: 6789458714990296145}
   - component: {fileID: 3150155376896807349}
+  - component: {fileID: 1198785454065557154}
   m_Layer: 15
   m_Name: RedMagnet
   m_TagString: Untagged
@@ -9744,7 +9745,7 @@ AudioSource:
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 0}
-  m_PlayOnAwake: 1
+  m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
   Loop: 0
@@ -9841,5 +9842,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8c9a1176ea9c57d47801141b70b93b60, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerTransform: {fileID: 7095820284587259562, guid: 82aad1a4bcf04c14a82543ece7365d8f, type: 3}
   pickUpAudioClip: {fileID: 8300000, guid: 93ee89947fffbce4b8da244032cf5bd0, type: 3}
+--- !u!114 &1198785454065557154
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1000012970591572}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 44dc2eac7765ccc4787069573eacc893, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

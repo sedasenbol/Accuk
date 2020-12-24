@@ -9,6 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7484530218967872433}
+  - component: {fileID: 3191882841304124952}
   m_Layer: 11
   m_Name: bus
   m_TagString: Untagged
@@ -36,9 +37,23 @@ Transform:
   - {fileID: 6135266435791390939}
   - {fileID: 7800318390939670956}
   - {fileID: 4752136203809259075}
+  - {fileID: 1106770216685647286}
   m_Father: {fileID: 7156248129225964955}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 270, y: 180, z: 0}
+--- !u!65 &3191882841304124952
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1995385067746126250}
+  m_Material: {fileID: 13400000, guid: f47eb3a9cae650a47ac2e0eba59c3ee3, type: 2}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 2.1833868, y: 7.0305185, z: 0.421196}
+  m_Center: {x: -0.04296382, y: 0.13608773, z: 1.1628782}
 --- !u!1 &2093889479591444431
 GameObject:
   m_ObjectHideFlags: 0
@@ -471,7 +486,6 @@ GameObject:
   - component: {fileID: 7253264779894747662}
   - component: {fileID: 1169332771031433273}
   - component: {fileID: 4426665886564539520}
-  - component: {fileID: 2118110308}
   m_Layer: 11
   m_Name: BUS_BODY
   m_TagString: Untagged
@@ -552,19 +566,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!65 &2118110308
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4381812127679674593}
-  m_Material: {fileID: 13400000, guid: f47eb3a9cae650a47ac2e0eba59c3ee3, type: 2}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 2.6338136, y: 7.41522, z: 2.2114518}
-  m_Center: {x: -0.00028699636, y: -2.5322523, z: -0.8643442}
 --- !u!1 &4743333482055202534
 GameObject:
   m_ObjectHideFlags: 0
@@ -657,6 +658,50 @@ Light:
   m_UseBoundingSphereOverride: 0
   m_ShadowRadius: 0
   m_ShadowAngle: 0
+--- !u!1 &6024760252382748959
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1106770216685647286}
+  - component: {fileID: 6869624982772563754}
+  m_Layer: 18
+  m_Name: Bus_Sides
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1106770216685647286
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6024760252382748959}
+  m_LocalRotation: {x: 1, y: -0, z: 0, w: 0.00000032782552}
+  m_LocalPosition: {x: 0.01, y: -2.17, z: -0.66}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 7484530218967872433}
+  m_RootOrder: 9
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &6869624982772563754
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6024760252382748959}
+  m_Material: {fileID: 13400000, guid: f47eb3a9cae650a47ac2e0eba59c3ee3, type: 2}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 2.432294, y: 7.3283076, z: 2.0849853}
+  m_Center: {x: -0.027753461, y: -2.2722569, z: -0.5424903}
 --- !u!1 &6245828734955815345
 GameObject:
   m_ObjectHideFlags: 0

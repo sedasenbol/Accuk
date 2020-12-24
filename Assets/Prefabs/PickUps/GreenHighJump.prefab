@@ -17,7 +17,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &4000012117052618
 Transform:
   m_ObjectHideFlags: 0
@@ -9666,6 +9666,7 @@ GameObject:
   - component: {fileID: 1600922839057590797}
   - component: {fileID: 740373249082593051}
   - component: {fileID: 1989795491841376744}
+  - component: {fileID: 3463381696211265957}
   m_Layer: 16
   m_Name: GreenHighJump
   m_TagString: Untagged
@@ -9713,7 +9714,7 @@ AudioSource:
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 0}
-  m_PlayOnAwake: 1
+  m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
   Loop: 0
@@ -9810,8 +9811,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8c9a1176ea9c57d47801141b70b93b60, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerTransform: {fileID: 7095820284587259562, guid: 82aad1a4bcf04c14a82543ece7365d8f, type: 3}
   pickUpAudioClip: {fileID: 8300000, guid: 93ee89947fffbce4b8da244032cf5bd0, type: 3}
+--- !u!114 &3463381696211265957
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1000013846074356}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 44dc2eac7765ccc4787069573eacc893, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1000014110595150
 GameObject:
   m_ObjectHideFlags: 0

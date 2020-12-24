@@ -29,7 +29,7 @@ Transform:
   m_LocalScale: {x: 3.333333, y: 3.333333, z: 3.333333}
   m_Children: []
   m_Father: {fileID: 7156248129225964955}
-  m_RootOrder: 1
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!108 &6589630431774941861
 Light:
@@ -129,7 +129,7 @@ Transform:
   - {fileID: 7800318390939670956}
   - {fileID: 4752136203809259075}
   m_Father: {fileID: 7156248129225964955}
-  m_RootOrder: 0
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 270, y: 180, z: 0}
 --- !u!1 &2093889479591444431
 GameObject:
@@ -471,7 +471,6 @@ GameObject:
   - component: {fileID: 7253264779894747662}
   - component: {fileID: 1169332771031433273}
   - component: {fileID: 4426665886564539520}
-  - component: {fileID: 2118110308}
   m_Layer: 11
   m_Name: BUS_BODY
   m_TagString: Untagged
@@ -552,19 +551,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!65 &2118110308
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4381812127679674593}
-  m_Material: {fileID: 13400000, guid: f47eb3a9cae650a47ac2e0eba59c3ee3, type: 2}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 2.6338136, y: 7.2776895, z: 2.3579116}
-  m_Center: {x: 0, y: -2.2340074, z: -0.8115579}
 --- !u!1 &5752804287177577676
 GameObject:
   m_ObjectHideFlags: 0
@@ -594,7 +580,7 @@ Transform:
   m_LocalScale: {x: 3.333333, y: 3.333333, z: 3.333333}
   m_Children: []
   m_Father: {fileID: 7156248129225964955}
-  m_RootOrder: 2
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!108 &8767942393588019434
 Light:
@@ -753,6 +739,7 @@ GameObject:
   - component: {fileID: -7280531746717731600}
   - component: {fileID: 2275125427164259474}
   - component: {fileID: 5564641461202429969}
+  - component: {fileID: 6537882304124267018}
   m_Layer: 11
   m_Name: MovingBus
   m_TagString: Untagged
@@ -771,6 +758,7 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 0.3, y: 0.3, z: 0.3}
   m_Children:
+  - {fileID: 3285527090608554674}
   - {fileID: 7484530218967872433}
   - {fileID: 5430059266199710232}
   - {fileID: 4336709606518330051}
@@ -817,6 +805,19 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 118
   m_CollisionDetection: 0
+--- !u!65 &6537882304124267018
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7501811080908334881}
+  m_Material: {fileID: 13400000, guid: f47eb3a9cae650a47ac2e0eba59c3ee3, type: 2}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 2.6338139, y: 0.37570396, z: 6.9121256}
+  m_Center: {x: 0, y: 2.7676387, z: 3.8363316}
 --- !u!1 &7892061509768526536
 GameObject:
   m_ObjectHideFlags: 0
@@ -899,6 +900,50 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!1 &8744910980547780225
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3285527090608554674}
+  - component: {fileID: 2823971338258825737}
+  m_Layer: 18
+  m_Name: Bus_Sides
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3285527090608554674
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8744910980547780225}
+  m_LocalRotation: {x: -0, y: -0.70710707, z: 0.7071066, w: 0}
+  m_LocalPosition: {x: -0.00028700012, y: 0.9869175, z: 1.4470991}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 7156248129225964955}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &2823971338258825737
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8744910980547780225}
+  m_Material: {fileID: 13400000, guid: f47eb3a9cae650a47ac2e0eba59c3ee3, type: 2}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 2.432294, y: 7.3283076, z: 2.0849853}
+  m_Center: {x: -0.027753461, y: -2.2722569, z: -0.5424903}
 --- !u!1 &8897892053877914258
 GameObject:
   m_ObjectHideFlags: 0

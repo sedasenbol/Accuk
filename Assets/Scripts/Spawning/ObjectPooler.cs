@@ -56,7 +56,6 @@ public class ObjectPooler : MonoBehaviour
         {
             Queue<GameObject> objectPool = new Queue<GameObject>();
 
-
             for (int i = 0; i < pool.poolSize; i++)
             {
                 GameObject obj = Instantiate(pool.prefab, pool.container);
@@ -87,16 +86,30 @@ public class ObjectPooler : MonoBehaviour
         }
     }
 
-    public GameObject SpawnFromPool(objectTag tag, Vector3 position, Quaternion rotation, string name = null)
+    private GameObject ReturnInactiveObject(objectTag tag)
     {
-        GameObject objectToSpawn = poolDictionary[tag].Dequeue();
+        if (poolDictionary[tag].Peek().activeSelf)
+        {
+            Debug.LogError($"{tag} size should be increased.");
+            poolDictionary[tag].Enqueue(poolDictionary[tag].Dequeue());
+            return ReturnInactiveObject(tag);
+        }
+        return poolDictionary[tag].Dequeue();
+    }
+
+    public void SpawnFromPool(objectTag tag, Vector3 position, Quaternion rotation, string name = null)
+    {
+
+        GameObject objectToSpawn = ReturnInactiveObject(tag);
         objectToSpawn.SetActive(true);
         objectToSpawn.transform.position = position;
         objectToSpawn.transform.rotation = rotation;
-        if (name != null) { objectToSpawn.name = name; }
+        if (name != null) 
+        {
+            objectToSpawn.name = name; 
+        }
 
         poolDictionary[tag].Enqueue(objectToSpawn);
-        return objectToSpawn;
     }
 
     public void DeactivateSpawnedObject(GameObject gameObject)

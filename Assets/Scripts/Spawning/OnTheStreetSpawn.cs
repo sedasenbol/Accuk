@@ -8,12 +8,12 @@ public class OnTheStreetSpawn : MonoBehaviour
     private ObjectPooler objectPooler;
     private List<Vector3> spawnPositions = new List<Vector3> { new Vector3(-0.65f, 0f, 0f), new Vector3(0f, 0f, 0f), new Vector3(0.65f, 0f, 0f) };
     private List<Vector3> stopSignSpawnPositions = new List<Vector3> { new Vector3(-0.335f, 0f, 0f), new Vector3(0.335f, 0f, 0f) };
-    private float SPAWN_LENGTH = 100;
+    private float SPAWN_LENGTH = 50;
     private List<Lane> unusedLanes = new List<Lane> { Lane.left, Lane.middle, Lane.right };
     private readonly List<Lane> allLanes = new List<Lane> { Lane.left, Lane.middle, Lane.right };
     private float busLength;
     private const float RAMP_OVER_BUS_LENGTH = 0.5f;
-    private float playerForwardSpeed = 7f;
+    private const float PLAYER_FORWARD_SPEED = 7f;
     private const int MIN_HARD_LANE_COUNT = 1;
     private const int MAX_HARD_LANE_COUNT = 2;
     private const int MIN_HARD_LANE_LENGTH = 2;
@@ -57,6 +57,7 @@ public class OnTheStreetSpawn : MonoBehaviour
             objectPooler.SpawnFromPool(ObjectPooler.objectTag.stopSign, stopSignSpawnPositions[stopSignLane], Quaternion.identity);
         }
         stopSignSpawnPositions[0] += stopSignSpawnFreq;
+        stopSignSpawnPositions[1] += stopSignSpawnFreq;
     }
 
     private void SpawnHardStreet()
@@ -120,7 +121,7 @@ public class OnTheStreetSpawn : MonoBehaviour
     private void SpawnMovingBusStreet(float streetDistance)
     {
 
-        float movingBusMinimumDistance = ((spawnPositions[0].z - playerTransform.position.z) / playerForwardSpeed) * MOVING_BUS_SPEED;
+        float movingBusMinimumDistance = ((spawnPositions[0].z - playerTransform.position.z) / PLAYER_FORWARD_SPEED) * MOVING_BUS_SPEED;
         List<Lane> movingBusLaneList = new List<Lane>();
         if (streetDistance > MIN_MOVING_BUS_EMPTINESS)
         {

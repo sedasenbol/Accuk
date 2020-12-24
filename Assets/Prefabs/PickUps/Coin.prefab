@@ -12,6 +12,8 @@ GameObject:
   - component: {fileID: 4832759857513536805}
   - component: {fileID: -3188790242424304531}
   - component: {fileID: 7633752225795886497}
+  - component: {fileID: 5569118552825169868}
+  - component: {fileID: 3345352069734348977}
   m_Layer: 14
   m_Name: Coin
   m_TagString: Untagged
@@ -46,7 +48,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a242f8bb19cbbea4e9dd0116bfb7d46e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerTransform: {fileID: 7095820284587259562, guid: 82aad1a4bcf04c14a82543ece7365d8f, type: 3}
   pickUpAudioClip: {fileID: 8300000, guid: 93ee89947fffbce4b8da244032cf5bd0, type: 3}
 --- !u!82 &-3188790242424304531
 AudioSource:
@@ -58,7 +59,7 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 8300000, guid: 93ee89947fffbce4b8da244032cf5bd0, type: 3}
+  m_audioClip: {fileID: 0}
   m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
@@ -157,6 +158,34 @@ SphereCollider:
   serializedVersion: 2
   m_Radius: 0.10204833
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!54 &5569118552825169868
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 864424142801951637}
+  serializedVersion: 2
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_UseGravity: 0
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
+--- !u!114 &3345352069734348977
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 864424142801951637}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 44dc2eac7765ccc4787069573eacc893, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &864606342612797969
 GameObject:
   m_ObjectHideFlags: 0

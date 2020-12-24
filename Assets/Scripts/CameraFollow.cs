@@ -8,6 +8,7 @@ public class CameraFollow : MonoBehaviour
     private Transform targetTransform;
     private Transform xform;
     private Vector3 offset = new Vector3(0f,3f,-2f);
+    private Quaternion gameRotation = Quaternion.Euler(34f, 0f, 0f);
     private Camera cam;
 
     private void FollowTarget()
@@ -18,12 +19,11 @@ public class CameraFollow : MonoBehaviour
     private void LoadGameCamera(Scene scene, LoadSceneMode mode)
     {
         if (scene.name != "Game") { return; }
-        xform = transform;
-           
+
+        xform = transform;   
         targetTransform = GameObject.FindGameObjectWithTag("Player").transform;
-        
-        cam = Camera.main;
-        cam.backgroundColor = Color.cyan ;
+
+        xform.rotation = gameRotation;
     }
 
     private void OnEnable()
@@ -39,9 +39,7 @@ public class CameraFollow : MonoBehaviour
 
     private void Update()
     {
-        if (targetTransform == null) {
-            Debug.Log("1");
-            return; }
+        if (targetTransform == null) { return; }
         FollowTarget();
     }
 }

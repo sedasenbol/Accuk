@@ -189,19 +189,19 @@ MonoBehaviour:
   - tag: 0
     prefab: {fileID: 136194, guid: 49dbc362fdf0c7a49a3d5e436f8d6031, type: 3}
     container: {fileID: 432610457}
-    poolSize: 30
+    poolSize: 60
   - tag: 1
     prefab: {fileID: 101166, guid: 62b590143d8a1f841b1ff8d5536f0676, type: 3}
     container: {fileID: 432610457}
-    poolSize: 30
+    poolSize: 60
   - tag: 2
     prefab: {fileID: 186562, guid: 052d9e2fb5dbfda48a537e0e649e3325, type: 3}
     container: {fileID: 432610457}
-    poolSize: 30
+    poolSize: 60
   - tag: 3
     prefab: {fileID: 129934, guid: e8bf8a360364d0948a2f6427cf3cc569, type: 3}
     container: {fileID: 432610457}
-    poolSize: 30
+    poolSize: 60
   - tag: 4
     prefab: {fileID: 7501811080908334881, guid: 6b3fb59d755745847b16740833548dd9, type: 3}
     container: {fileID: 1369811171}
@@ -217,7 +217,7 @@ MonoBehaviour:
   - tag: 7
     prefab: {fileID: 6388372521292836073, guid: 6f68dfcded674364f8b137702c42898e, type: 3}
     container: {fileID: 1784990863}
-    poolSize: 50
+    poolSize: 200
   - tag: 8
     prefab: {fileID: 5256771296192640940, guid: e7be58e2588781c4c88abaf8b99275c0, type: 3}
     container: {fileID: 1958963355}
@@ -229,7 +229,7 @@ MonoBehaviour:
   - tag: 10
     prefab: {fileID: 864424142801951637, guid: 587cab69378beee4790193392e692af0, type: 3}
     container: {fileID: 1888389406}
-    poolSize: 100
+    poolSize: 300
   - tag: 11
     prefab: {fileID: 1000012970591572, guid: b71c8e730b464004d92f43e58ea8c923, type: 3}
     container: {fileID: 191986454}
@@ -385,7 +385,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!108 &705507994
 Light:
   m_ObjectHideFlags: 0
@@ -546,7 +546,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!81 &963194226
 AudioListener:
   m_ObjectHideFlags: 0
@@ -808,7 +808,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1341088302}
   m_Layer: 0
-  m_Name: Stage
+  m_Name: GameStage
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1278,6 +1278,26 @@ PrefabInstance:
       propertyPath: m_Name
       value: Player
       objectReference: {fileID: 0}
+    - target: {fileID: 7092505810090633053, guid: 82aad1a4bcf04c14a82543ece7365d8f, type: 3}
+      propertyPath: normalMaterial
+      value: 
+      objectReference: {fileID: 2100000, guid: 20e17aac92cea844aaa708706067eb14, type: 2}
+    - target: {fileID: 7092505810090633053, guid: 82aad1a4bcf04c14a82543ece7365d8f, type: 3}
+      propertyPath: doubleTapMaterial
+      value: 
+      objectReference: {fileID: 2100000, guid: 1a0dec1fa084e1b4abd7c6cf33e568ff, type: 2}
+    - target: {fileID: 7092505810090633053, guid: 82aad1a4bcf04c14a82543ece7365d8f, type: 3}
+      propertyPath: redMagnetMaterial
+      value: 
+      objectReference: {fileID: 2100000, guid: cea0c4191eb5cb440aa5355d44958681, type: 2}
+    - target: {fileID: 7092505810090633053, guid: 82aad1a4bcf04c14a82543ece7365d8f, type: 3}
+      propertyPath: greenHighJumpMaterial
+      value: 
+      objectReference: {fileID: 2100000, guid: 2d6209e982156604ea6d7c513bc7b774, type: 2}
+    - target: {fileID: 7092505810090633053, guid: 82aad1a4bcf04c14a82543ece7365d8f, type: 3}
+      propertyPath: blueDoubleScoreMaterial
+      value: 
+      objectReference: {fileID: 2100000, guid: 527a2f1bf2a8e6b44a73711edbc69733, type: 2}
     - target: {fileID: 7095820284587259562, guid: 82aad1a4bcf04c14a82543ece7365d8f, type: 3}
       propertyPath: m_RootOrder
       value: 4
@@ -1322,6 +1342,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7174078347155556190, guid: 82aad1a4bcf04c14a82543ece7365d8f, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 20e17aac92cea844aaa708706067eb14, type: 2}
     - target: {fileID: 7965441013649608692, guid: 82aad1a4bcf04c14a82543ece7365d8f, type: 3}
       propertyPath: m_Constraints
       value: 114

@@ -13,24 +13,15 @@ public class TopRun : MonoBehaviour
 
     private void OnEnable()
     {
-        if (!sequence.IsPlaying())
-        {
-            sequence.TogglePause();
-        }
-    }
-
-    private void OnDisable()
-    {
-        sequence.Pause();
+        sequence = DOTween.Sequence();
+        sequence.Append(xform.DOScale(SCALING_SIZE, SCALING_TIME));
+        sequence.Append(xform.DOScale(INITIAL_SCALE, SCALING_TIME));
+        sequence.SetLoops(-1);
     }
 
     private void Awake()
     {
         xform = transform;
-
-        sequence = DOTween.Sequence();
-        sequence.Append(xform.DOScale(SCALING_SIZE,SCALING_TIME));
-        sequence.Append(xform.DOScale(INITIAL_SCALE,SCALING_TIME));
-        sequence.SetLoops(-1);
     }
+
 }

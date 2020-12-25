@@ -7,7 +7,7 @@
     private bool isDoubleTapActive = false;
 
     private int coins = 0;
-    private int score = 0;
+    private float score = 0;
 
     private State currentState = State.Start;
     private Scene currentScene = Scene.MainMenu;
@@ -18,7 +18,7 @@
     public bool IsBlueDoubleScoreActive { get { return isBlueDoubleScoreActive; } set { isBlueDoubleScoreActive = value; } }
     public bool IsDoubleTapActive { get { return isDoubleTapActive; } set { isDoubleTapActive = value; } }
     public int Coins { get { return coins; } set { coins = value; } }
-    public int Score { get { return score; } set { score = value; } }
+    public float Score { get { return score; } set { score = value; } }
     public State CurrentState { get { return currentState; } set { currentState = value; } }
     public Scene CurrentScene { get { return currentScene; } set { currentScene = value; } }
 

@@ -155,7 +155,10 @@ public class Player : MonoBehaviour
                 rb.constraints |= RigidbodyConstraints.FreezePositionX;
             });
         }
-
+        else
+        {
+            Die();
+        }
     }
 
     private void UpdateLane(float xPosition)

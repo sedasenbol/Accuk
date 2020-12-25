@@ -25,7 +25,7 @@ public class GameManager : MonoBehaviour
     private const float GREEN_HIGH_JUMP_DURATION = 25f;
     private const float BLUE_DOUBLE_SCORE_DURATION = 25f;
     private const float DOUBLE_TAP_DURATION = 25f;
-    private const int DOUBLE_TAP_COIN_COUNT = 1;
+    private const int DOUBLE_TAP_COIN_COUNT = 50;
 
     private void StartGame()
     {
@@ -49,12 +49,14 @@ public class GameManager : MonoBehaviour
     private void PauseGame()
     {
         Time.timeScale = 0f;
+        gameState.IsAlive = false;
         gameState.CurrentState = GameState.State.Paused;
     }
 
     private void ResumeGame()
     {
         Time.timeScale = 1f;
+        gameState.IsAlive = true;
         gameState.CurrentState = GameState.State.OnPlay;
     }
 
@@ -68,6 +70,13 @@ public class GameManager : MonoBehaviour
     private void IncreaseCoins()
     {
         gameState.Coins++;
+    }
+
+    private void IncreaseScore()
+    {
+        if (!gameState.IsAlive) { return; }
+
+        gameState.Score += (gameState.IsBlueDoubleScoreActive) ? 20 * Time.deltaTime : 10 * Time.deltaTime;
     }
 
     private void ActivateRedMagnet()
@@ -171,6 +180,7 @@ public class GameManager : MonoBehaviour
 
     private void Update()
     {
+        IncreaseScore();
         DeactivateRedMagnet();
         DeactivateGreenHighJump();
         DeactivateBlueDoubleScore();

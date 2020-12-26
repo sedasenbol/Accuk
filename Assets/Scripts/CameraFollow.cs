@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public class CameraFollow : MonoBehaviour
@@ -9,7 +7,6 @@ public class CameraFollow : MonoBehaviour
     private Transform xform;
     private Vector3 offset = new Vector3(0f,3f,-2f);
     private Quaternion gameRotation = Quaternion.Euler(34f, 0f, 0f);
-    private Camera cam;
 
     private void FollowTarget()
     {
@@ -36,10 +33,10 @@ public class CameraFollow : MonoBehaviour
         SceneManager.sceneLoaded -= LoadGameCamera;
     }
 
-
     private void Update()
     {
-        if (targetTransform == null) { return; }
+        if (!targetTransform) { return; }
+
         FollowTarget();
     }
 }

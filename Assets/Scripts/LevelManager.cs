@@ -12,18 +12,19 @@ public class LevelManager : MonoBehaviour
     public static event Action OnActivateDoubleTap;
     public static event Action OnDeactivateDoubleTap;
 
-    private LevelState levelState = new LevelState();
     public LevelState StateOfTheLevel => levelState;
-    private float redMagnetStartTime;
-    private float greenHighJumpStartTime;
-    private float blueDoubleScoreStartTime;
-    private float doubleTapStartTime;
+    private LevelState levelState = new LevelState();
+
     private const float RED_MAGNET_DURATION = 25f;
     private const float GREEN_HIGH_JUMP_DURATION = 25f;
     private const float BLUE_DOUBLE_SCORE_DURATION = 25f;
     private const float DOUBLE_TAP_DURATION = 25f;
     private const int DOUBLE_TAP_COIN_COUNT = 50;
 
+    private float redMagnetStartTime;
+    private float greenHighJumpStartTime;
+    private float blueDoubleScoreStartTime;
+    private float doubleTapStartTime;
 
     private void IncreaseCoins()
     {
@@ -79,12 +80,13 @@ public class LevelManager : MonoBehaviour
 
     private void ActivateDoubleTap()
     {
-        if (levelState.Coins <  DOUBLE_TAP_COIN_COUNT || levelState.IsDoubleTapActive) { return; }
+        if (levelState.IsDoubleTapActive || levelState.Coins < DOUBLE_TAP_COIN_COUNT) { return; }
+
+        levelState.Coins -= DOUBLE_TAP_COIN_COUNT;
 
         levelState.IsDoubleTapActive = true;
         doubleTapStartTime = Time.time;
         OnActivateDoubleTap?.Invoke();
-        levelState.Coins -= DOUBLE_TAP_COIN_COUNT;
     }
 
     private void DeactivateDoubleTap()
@@ -98,32 +100,41 @@ public class LevelManager : MonoBehaviour
     private void OnEnable()
     {
         Player.OnCoinPickUp += IncreaseCoins;
+
         Player.OnRedMagnetPickUp += ActivateRedMagnet;
         Player.OnGreenHighJumpPickUp += ActivateGreenHighJump;
         Player.OnBlueDoubleScorePickUp += ActivateBlueDoubleScore;
+
         Player.OnDeactivateDoubleTap += (()=> doubleTapStartTime = Time.time - DOUBLE_TAP_DURATION);
         TouchController.OnDoubleTapMovement += ActivateDoubleTap;
+
         UIManager.OnPauseButtonClicked += (()=> levelState.IsAlive = false);
         UIManager.OnResumeButtonClicked += (() => levelState.IsAlive = true);
+
         Player.OnPlayerDeath += (() => levelState.IsAlive = false);
     }
 
     private void OnDisable()
     {
         Player.OnCoinPickUp -= IncreaseCoins;
+
         Player.OnRedMagnetPickUp -= ActivateRedMagnet;
         Player.OnGreenHighJumpPickUp -= ActivateGreenHighJump;
         Player.OnBlueDoubleScorePickUp -= ActivateBlueDoubleScore;
+
         Player.OnDeactivateDoubleTap -= (() => doubleTapStartTime = Time.time - DOUBLE_TAP_DURATION);
         TouchController.OnDoubleTapMovement -= ActivateDoubleTap;
+
         UIManager.OnPauseButtonClicked -= (() => levelState.IsAlive = false);
         UIManager.OnResumeButtonClicked -= (() => levelState.IsAlive = true);
+
         Player.OnPlayerDeath -= (() => levelState.IsAlive = false);
     }
 
     private void Update()
     {
         IncreaseScore();
+
         DeactivateRedMagnet();
         DeactivateGreenHighJump();
         DeactivateBlueDoubleScore();

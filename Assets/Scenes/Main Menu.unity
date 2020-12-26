@@ -1078,7 +1078,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   tapArea: {fileID: 823085209}
   tapToPlayText: {fileID: 1215991542}
-  topRunButton: {fileID: 1623066742}
+  quitButton: {fileID: 1623066742}
   pauseButton: {fileID: 192521979}
   resumeButton: {fileID: 544397905}
   scoreText: {fileID: 1408052220}
@@ -2537,7 +2537,7 @@ GameObject:
   - component: {fileID: 1623066745}
   - component: {fileID: 1623066742}
   m_Layer: 5
-  m_Name: Top Run
+  m_Name: QuitButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2605,7 +2605,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1623066743}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 439858165}
+        m_TargetAssemblyTypeName: UIManager, Assembly-CSharp
+        m_MethodName: HandleQuitButtonClick
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1623066743
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3026,7 +3038,7 @@ GameObject:
   - component: {fileID: 2012226882}
   - component: {fileID: 2012226881}
   m_Layer: 5
-  m_Name: TopRunText
+  m_Name: QuitText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3071,7 +3083,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Top Run
+  m_text: QUIT
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 5302535af1044152a457ed104f1f4b91, type: 2}
   m_sharedMaterial: {fileID: 2164040, guid: 5302535af1044152a457ed104f1f4b91, type: 2}

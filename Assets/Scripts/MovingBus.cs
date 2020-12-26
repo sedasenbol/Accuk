@@ -5,7 +5,9 @@ using UnityEngine;
 public class MovingBus : MonoBehaviour
 {
     private Vector3 SPEED = new Vector3(0f, 0f, -6f);
+
     private Rigidbody rb;
+
     private bool isPlayerDead = false;
 
     private void StandStill()

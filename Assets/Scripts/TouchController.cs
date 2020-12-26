@@ -11,15 +11,8 @@ public class TouchController : MonoBehaviour, IBeginDragHandler, IDragHandler, I
     private float tapTime = 0;
     private float tapDelay = 0.5f;
 
-    public void OnBeginDrag(PointerEventData eventData)
-    {
-    }
-
-    public void OnDrag(PointerEventData eventData)
-    {
-    }
-
-
+    public void OnBeginDrag(PointerEventData eventData) { }
+    public void OnDrag(PointerEventData eventData) { }
     public void OnEndDrag(PointerEventData eventData)
     {
         OnEndDragMovement?.Invoke(eventData);
@@ -39,7 +32,9 @@ public class TouchController : MonoBehaviour, IBeginDragHandler, IDragHandler, I
             tapTime = 0;
             OnDoubleTapMovement?.Invoke();
         }
-        else if (tapped > 2 || Time.time - tapTime > 1 ) { tapped = 0; }
-
+        else if (tapped > 2 || Time.time - tapTime > 1 ) 
+        { 
+            tapped = 0; 
+        }
     }
 }

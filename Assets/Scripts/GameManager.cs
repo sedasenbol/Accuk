@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.SceneManagement;
 using System;
 using DG.Tweening;
@@ -11,7 +9,6 @@ public class GameManager : MonoBehaviour
 
     private GameObject stage;
     private GameState gameState = new GameState();
-
 
     private void StartGame()
     {
@@ -26,7 +23,6 @@ public class GameManager : MonoBehaviour
             gameState.CurrentScene = GameState.Scene.MainMenu;
         }
         SceneManager.LoadScene(1, LoadSceneMode.Additive);
-        Destroy(stage);
         gameState.CurrentScene = GameState.Scene.Game;
         gameState.CurrentState = GameState.State.OnPlay;
         gameState.IsAlive = true;
@@ -46,6 +42,11 @@ public class GameManager : MonoBehaviour
         gameState.CurrentState = GameState.State.OnPlay;
     }
 
+    private void QuitGame()
+    {
+        Application.Quit();
+    }
+
     private void GameOver()
     {
         Time.timeScale = 0f;
@@ -56,26 +57,28 @@ public class GameManager : MonoBehaviour
     private void OnEnable()
     {
         UIManager.OnPlayerTapped += StartGame;
+        SceneManager.sceneLoaded += ((Scene scene, LoadSceneMode mode) => Destroy(stage));
+
         UIManager.OnPauseButtonClicked += PauseGame;
         UIManager.OnResumeButtonClicked += ResumeGame;
+        UIManager.OnQuitButtonClicked += QuitGame;
+        
         Player.OnPlayerDeath += GameOver;
     }
 
     private void OnDisable()
     {
         UIManager.OnPlayerTapped -= StartGame;
+        SceneManager.sceneLoaded -= ((Scene scene, LoadSceneMode mode) => Destroy(stage));
+
         UIManager.OnPauseButtonClicked -= PauseGame;
         UIManager.OnResumeButtonClicked -= ResumeGame;
+        UIManager.OnQuitButtonClicked -= QuitGame;
         Player.OnPlayerDeath -= GameOver;
     }
 
     private void Start()
     {
-        if (FindObjectsOfType<GameManager>().Length > 1) 
-        {
-            Destroy(this.gameObject);
-        }
-
         stage = GameObject.Find("Stage");
 
         DOTween.defaultTimeScaleIndependent = true;

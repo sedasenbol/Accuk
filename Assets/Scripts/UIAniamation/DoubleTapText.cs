@@ -8,6 +8,7 @@ public class DoubleTapText : MonoBehaviour
     private const float SCALING_TIME = 2f;
     private const float MAX_SCALING_SIZE = 1.75f;
     private const float MIN_SCALING_SCALE = 0.25f;
+
     private Transform xform;
     private Sequence sequence;
 

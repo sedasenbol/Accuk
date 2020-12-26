@@ -1,17 +1,18 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class ObjectSpawned : MonoBehaviour
 {
-    ObjectPooler objectPooler;
+    private ObjectPooler objectPooler;
+
     private Transform playerTransform;
     private Transform xform;
-    private const float SPAWN_OFFSET = 5f;
+
+    private const float SPAWN_OFFSET = 10f;
 
     private void OnStayedBehindThePlayer()
     {
         if (playerTransform.position.z < xform.position.z + SPAWN_OFFSET) { return; }
+
         objectPooler.DeactivateSpawnedObject(this.gameObject);        
     }
 

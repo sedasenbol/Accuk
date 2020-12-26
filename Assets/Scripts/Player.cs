@@ -25,7 +25,6 @@ public class Player : MonoBehaviour
     private readonly Vector3 initialRotation = new Vector3(0f, 0f, 0f);
     
     private const float FORWARD_SPEED = 7f;
-    private const float ZERO_VELOCITY_ERROR = 0.01f;
 
     private readonly Vector3 slideRotation = new Vector3(-80f, 0f, 0f);
     private const float SLIDING_TIME = 0.5f;
@@ -37,16 +36,15 @@ public class Player : MonoBehaviour
 
     private readonly Vector3 jumpForce = new Vector3(0f, 65f, 0f);
     private readonly Vector3 highJumpForce = new Vector3(0f, 100f, 0f);
-    private readonly Vector3 pullDownForce = new Vector3(0f, -10f, 0f);
+    private readonly Vector3 pullDownForce = new Vector3(0f, -100f, 0f);
     private readonly Vector3 jumpGravity = new Vector3(0f, -9.81f, 0f);
     private readonly Vector3 normalGravity = new Vector3(0f, -100f, 0f);
     private const float JUMP_ROTATION_TIME = 0.5f;
-    private readonly Vector3 jumpRotationX = new Vector3(360f, 0f, 0f);
     private readonly Vector3 jumpRotationY = new Vector3(0f, 360f, 0f);
 
     private const float DEATH_ROTATION_TIME = 0.1f;
-    private readonly Vector3 deathXRotation = new Vector3(-90f, 0f, 0f);
     private const float MAX_DEATH_Y_ROTATION = 30f;
+    private readonly Vector3 deathXRotation = new Vector3(-90f, 0f, 0f);
 
     private Quaternion rampRotation = Quaternion.Euler(-62f, 0f, 0f);
 
@@ -64,6 +62,7 @@ public class Player : MonoBehaviour
     private bool isGrounded = true;
     private bool isOnSlope = false;
     private bool isDoubleTapActive = false;
+
     private Lane lane = Lane.Middle;
 
     private enum Lane
@@ -76,17 +75,17 @@ public class Player : MonoBehaviour
 
     private void MoveForward()
     {
-        if (!isOnSlope & !isJumping)
-        {
-            rb.velocity = new Vector3(rb.velocity.x, 0, FORWARD_SPEED);
-        }
-        else if (isJumping)
+        if (isJumping)
         {
             rb.velocity = new Vector3(rb.velocity.x, rb.velocity.y, FORWARD_SPEED);
         }
-        else
+        else if(isOnSlope)
         {
             rb.velocity = new Vector3(rb.velocity.x, FORWARD_SPEED * -Mathf.Sin(rampRotation.x) / Mathf.Cos(rampRotation.x), FORWARD_SPEED);
+        }
+        else
+        {
+            rb.velocity = new Vector3(rb.velocity.x, 0, FORWARD_SPEED);
         }
     }
 
@@ -211,13 +210,11 @@ public class Player : MonoBehaviour
     private void Jump()
     {
         if (!isGrounded || isSliding || isRotating || isJumping) { return; }
+
         isJumping = true;
 
+        rb.velocity = new Vector3(rb.velocity.x, 0, rb.velocity.z);
         Physics.gravity = jumpGravity;
-
-        /*rb.useGravity = false;
-        Sequence sequence = DOTween.Sequence();
-        sequence.Append(rb.DOMoveY(1, 1)).OnComplete(() => rb.useGravity = true);*/
         
         if (ishighJumpPowerUpActive)
         {
@@ -236,29 +233,11 @@ public class Player : MonoBehaviour
         if (rb.position.y < 0.75f && !ishighJumpPowerUpActive ) { return; }
         if (rb.position.y < 1.2f && ishighJumpPowerUpActive) { return; }
 
-        int randomJumpRotation = 1;// UnityEngine.Random.Range(0, 2);// JUMP_ROTATION_RANDOM_COUNT);
-        switch (randomJumpRotation)
-        {
-            case 0:
-                isRotating = true;
-                //rb.constraints &= ~RigidbodyConstraints.FreezeRotationX;
+        isRotating = true;
 
-                Tween tween0 = rb.DORotate(jumpRotationX, JUMP_ROTATION_TIME, RotateMode.FastBeyond360);
-                tween0.SetRelative();//.SetEase(Ease.Linear);
-                tween0.OnComplete(() =>
-                {
-                    //rb.constraints |= RigidbodyConstraints.FreezeRotationX;
-                    isRotating = false;
-                });
-                break;
-            case 1:
-                isRotating = true;
-
-                Tween tween1 = rb.DORotate(jumpRotationY, JUMP_ROTATION_TIME, RotateMode.FastBeyond360);
-                tween1.SetRelative();//.SetEase(Ease.Linear);
-                tween1.OnComplete(() => isRotating = false);
-                break;
-        }
+        Tween tween = rb.DORotate(jumpRotationY, JUMP_ROTATION_TIME, RotateMode.FastBeyond360);
+        tween.SetRelative();
+        tween.OnComplete(() => isRotating = false);
     }
 
     private void PullDown()
@@ -286,25 +265,23 @@ public class Player : MonoBehaviour
             isRotating = false;
             anim.SetBool("isSliding", false);
         });
-        sequence.Play();
     }
 
-    private void InitialRotation()
+    private void RotateAtTheBeginning()
     {
         Tween tween = rb.DORotate(initialRotation, INITIAL_ROTATION_TIME);
-        tween.SetEase(Ease.Linear);
         tween.OnComplete(() => 
         {
             rb.constraints |= RigidbodyConstraints.FreezeRotationY;
             isRotating = false;
         });
-        tween.Play();
-
     }
 
     private void HandleDoubleTapCollision()
     {
         isDoubleTapActive = false;
+        OnDeactivateDoubleTap?.Invoke();
+
         Collider[] hitColliders = Physics.OverlapSphere(xform.position, 10f);
         foreach (var collider in hitColliders)
         {
@@ -313,7 +290,10 @@ public class Player : MonoBehaviour
                 collider.gameObject.SetActive(false);
             }
         }
-        OnDeactivateDoubleTap?.Invoke();
+
+        isOnSlope = false;
+        //rb.velocity = Vector3.zero;
+        //rb.AddForce(pullDownForce);
     }
 
     private void Die()
@@ -323,12 +303,14 @@ public class Player : MonoBehaviour
             HandleDoubleTapCollision();
             return;
         }
+
         OnPlayerHitTheObstacle?.Invoke();
+
         Physics.gravity = new Vector3(0f, -1000f, 0f);
         isAlive = false;
         anim.SetBool("isDead", true);
-
         DOTween.KillAll();
+
         float randomYRotation = UnityEngine.Random.Range(-MAX_DEATH_Y_ROTATION, MAX_DEATH_Y_ROTATION);
         Vector3 deathRotation = deathXRotation + new Vector3(0f, randomYRotation, 0f);
         rb.DORotate(deathRotation, DEATH_ROTATION_TIME).OnComplete(()=> 
@@ -337,16 +319,6 @@ public class Player : MonoBehaviour
             OnPlayerDeath?.Invoke();
         });
         
-    }
-
-    private bool CheckZeroVelocity()
-    {
-        float forwardVelocity = rb.velocity.z;
-        if (forwardVelocity < ZERO_VELOCITY_ERROR)
-        {
-            return true;
-        }
-        return false;
     }
 
     private void OnCollisionEnter(Collision collision)
@@ -449,6 +421,7 @@ public class Player : MonoBehaviour
     private void OnEnable()
     {
         TouchController.OnEndDragMovement += DetermineDragDirection;
+
         LevelManager.OnDeactivateGreenHighJump += DeactivateGreenHighJump;
         LevelManager.OnDeactivateRedMagnet += DeactivateRedMagnet;
         LevelManager.OnDeactivateBlueDoubleScore += DeactivateBlueDoubleScore;
@@ -459,6 +432,7 @@ public class Player : MonoBehaviour
     private void OnDisable()
     {
         TouchController.OnEndDragMovement -= DetermineDragDirection;
+
         LevelManager.OnDeactivateGreenHighJump -= DeactivateGreenHighJump;
         LevelManager.OnDeactivateRedMagnet -= DeactivateRedMagnet;
         LevelManager.OnDeactivateBlueDoubleScore -= DeactivateBlueDoubleScore;
@@ -473,13 +447,12 @@ public class Player : MonoBehaviour
         skinnedMeshRenderer = GetComponentInChildren<SkinnedMeshRenderer>();
         xform = GetComponent<Transform>();
 
-        InitialRotation();
+        RotateAtTheBeginning();
     }
 
     private void Update()
     {
-        if (!isAlive) { return; }
-        if (isJumping && !isRotating)
+        if (isAlive && isJumping && !isRotating)
         {
             RotateWhileJumping();
         }
@@ -488,10 +461,7 @@ public class Player : MonoBehaviour
     private void FixedUpdate()
     {
         if (!isAlive) { return; }
+        
         MoveForward();
-        //if (CheckZeroVelocity())
-        {
-          //  Die();
-        }
     }
 }

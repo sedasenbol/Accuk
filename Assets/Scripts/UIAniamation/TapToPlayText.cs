@@ -7,8 +7,10 @@ public class TapToPlayText : MonoBehaviour
 {
     private const float ROTATION_TIME = 0.5f;
     private const float ROTATION_DIVISOR = 2f;
+
     private readonly Vector3 startingRotation = new Vector3(0, 0, 30);
     private readonly Vector3 rotationAngle = new Vector3(0, 0, 5);
+
     private Transform xform;
     private Sequence sequence;
 

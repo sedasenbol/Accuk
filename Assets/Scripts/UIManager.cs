@@ -12,10 +12,11 @@ public class UIManager : MonoBehaviour, IPointerDownHandler
     public static event Action OnPlayerTapped;
     public static event Action OnPauseButtonClicked;
     public static event Action OnResumeButtonClicked;
+    public static event Action OnQuitButtonClicked;
 
     [SerializeField] private TextMeshProUGUI tapArea;
     [SerializeField] private TextMeshProUGUI tapToPlayText;
-    [SerializeField] private Button topRunButton;
+    [SerializeField] private Button quitButton;
     [SerializeField] private Button pauseButton;
     [SerializeField] private Button resumeButton;
     [SerializeField] private TextMeshProUGUI scoreText;
@@ -24,15 +25,15 @@ public class UIManager : MonoBehaviour, IPointerDownHandler
     [SerializeField] private List<Image> powerUpImages;
 
     private const int POWER_UP_IMAGE_COUNT = 4;
-    private const int DOUBLE_TAP_COIN_COUNT = 50;
     private const float POWER_UP_DURATION = 25f;
+    private const int DOUBLE_TAP_COIN_COUNT = 50;
     private LevelState levelState;
     private int activePowerUpCount = 0;
     private bool isGameActive = false;
 
-    private Dictionary<int, Vector3> posDict = new Dictionary<int, Vector3>(POWER_UP_IMAGE_COUNT);
-    private Dictionary<imageColor, int> powerUpImagesPosDict = new Dictionary<imageColor, int> { { imageColor.red, 0}, {imageColor.black, 1 }, { imageColor.blue, 2 }, { imageColor.green, 3 } };
-    private Dictionary<imageColor, float> powerUpImagesCountersDict = new Dictionary<imageColor, float> { { imageColor.red, 0 },{ imageColor.black, 0 },{ imageColor.blue, 0 },{ imageColor.green, 0 } };
+    private readonly Dictionary<int, Vector3> posDict = new Dictionary<int, Vector3>(POWER_UP_IMAGE_COUNT);
+    private readonly Dictionary<ImageColor, int> powerUpImagesPosDict = new Dictionary<ImageColor, int> { { ImageColor.red, 0}, { ImageColor.black, 1 }, { ImageColor.blue, 2 }, { ImageColor.green, 3 } };
+    private readonly Dictionary<ImageColor, float> powerUpImagesCountersDict = new Dictionary<ImageColor, float> { { ImageColor.red, 0 },{ ImageColor.black, 0 },{ ImageColor.blue, 0 },{ ImageColor.green, 0 } };
 
     private readonly Color white = new Color(1f, 1f, 1f);
     private readonly Color black = new Color(0f, 0f, 0f);
@@ -40,7 +41,7 @@ public class UIManager : MonoBehaviour, IPointerDownHandler
     private readonly Color blue = new Color(0f, 149f/255f, 1f);
     private readonly Color green = new Color(0f, 199f/255f, 34f/255f);
 
-    private enum imageColor
+    private enum ImageColor
     {
         red = 0,
         black = 1,  
@@ -54,7 +55,12 @@ public class UIManager : MonoBehaviour, IPointerDownHandler
         LoadGameScreen();
     }
 
-    private IEnumerator FadeColor(imageColor colorOfImage, Color colorToFade)
+    public void HandleQuitButtonClick()
+    {
+        OnQuitButtonClicked?.Invoke();
+    }
+
+    private IEnumerator FadeColor(ImageColor colorOfImage, Color colorToFade)
     {
         while (powerUpImagesCountersDict[colorOfImage]<POWER_UP_DURATION)
         {
@@ -69,73 +75,101 @@ public class UIManager : MonoBehaviour, IPointerDownHandler
         ShiftPowerUpColors(colorOfImage);
     }
 
-    private void ShiftPowerUpColors(imageColor colorOfImage)
+    private void ShiftPowerUpColors(ImageColor colorOfImage)
     {
         int posIndex = powerUpImagesPosDict[colorOfImage];
-        for (int i = 0; i < powerUpImagesPosDict.Count; i++)
+
+        for (int i = 0; i < POWER_UP_IMAGE_COUNT; i++)
         {
-            if (powerUpImagesPosDict[(imageColor)i] > posIndex)
+            if (powerUpImagesPosDict[(ImageColor)i] > posIndex)
             {
-                int newPosIndex = powerUpImagesPosDict[(imageColor)i] - 1;
+                int newPosIndex = powerUpImagesPosDict[(ImageColor)i] - 1;
                 powerUpImages[i].transform.position = posDict[newPosIndex];
-                powerUpImagesPosDict[(imageColor)i]--;
+                powerUpImagesPosDict[(ImageColor)i]--;
             }
         }
     }
 
     private void ActivateBlueDoubleScore()
     {
-        if (powerUpImagesCountersDict[imageColor.blue] > 0)
+        if (powerUpImagesCountersDict[ImageColor.blue] > 0)
         {
-            powerUpImagesCountersDict[imageColor.blue] = 0;
+            powerUpImagesCountersDict[ImageColor.blue] = 0;
             return;
         }
 
-        powerUpImages[(int)imageColor.blue].transform.position = posDict[activePowerUpCount];
+        powerUpImages[(int)ImageColor.blue].transform.position = posDict[activePowerUpCount];
 
-        powerUpImagesPosDict[imageColor.blue] = activePowerUpCount;
-        powerUpImages[(int)imageColor.blue].gameObject.SetActive(true);
+        powerUpImagesPosDict[ImageColor.blue] = activePowerUpCount;
+        powerUpImages[(int)ImageColor.blue].gameObject.SetActive(true);
 
-        StartCoroutine(FadeColor(imageColor.blue, blue));
+        StartCoroutine(FadeColor(ImageColor.blue, blue));
         activePowerUpCount++;
-
     }
 
     private void ActivateGreenHighJump()
     {
-        if (powerUpImagesCountersDict[imageColor.green] > 0)
+        if (powerUpImagesCountersDict[ImageColor.green] > 0)
         {
-            powerUpImagesCountersDict[imageColor.green] = 0;
+            powerUpImagesCountersDict[ImageColor.green] = 0;
             return;
         }
 
-        powerUpImages[(int)imageColor.green].transform.position = posDict[activePowerUpCount];
+        powerUpImages[(int)ImageColor.green].transform.position = posDict[activePowerUpCount];
 
-        powerUpImagesPosDict[imageColor.green] = activePowerUpCount;
-        powerUpImages[(int)imageColor.green].gameObject.SetActive(true);
+        powerUpImagesPosDict[ImageColor.green] = activePowerUpCount;
+        powerUpImages[(int)ImageColor.green].gameObject.SetActive(true);
 
-        StartCoroutine(FadeColor(imageColor.green, green));
+        StartCoroutine(FadeColor(ImageColor.green, green));
         activePowerUpCount++;
-
     }
 
     private void ActivateRedMagnet()
     {
-        if (powerUpImagesCountersDict[imageColor.red] > 0)
+        if (powerUpImagesCountersDict[ImageColor.red] > 0)
         {
-            powerUpImagesCountersDict[imageColor.red] = 0;
+            powerUpImagesCountersDict[ImageColor.red] = 0;
             return;
         }
 
-        powerUpImages[(int)imageColor.red].transform.position = posDict[activePowerUpCount];
+        powerUpImages[(int)ImageColor.red].transform.position = posDict[activePowerUpCount];
 
-        powerUpImagesPosDict[imageColor.red] = activePowerUpCount;
-        powerUpImages[(int)imageColor.red].gameObject.SetActive(true);
+        powerUpImagesPosDict[ImageColor.red] = activePowerUpCount;
+        powerUpImages[(int)ImageColor.red].gameObject.SetActive(true);
 
-        StartCoroutine(FadeColor(imageColor.red, red));
+        StartCoroutine(FadeColor(ImageColor.red, red));
         activePowerUpCount++;
-
     }
+
+    private void ActivateDoubleTap()
+    {
+        doubleTapText.text = $"-{DOUBLE_TAP_COIN_COUNT} coins";
+        doubleTapText.gameObject.SetActive(true);
+
+
+        powerUpImages[(int)ImageColor.black].transform.position = posDict[activePowerUpCount];
+        powerUpImagesPosDict[ImageColor.black] = activePowerUpCount;
+        powerUpImages[(int)ImageColor.black].gameObject.SetActive(true);
+
+        StartCoroutine(FadeColor(ImageColor.black, black));
+        activePowerUpCount++;
+    }
+
+    private void DeactivateDoubleTap()
+    {
+        doubleTapText.gameObject.SetActive(false);
+        powerUpImagesCountersDict[ImageColor.black] = POWER_UP_DURATION;
+    }
+
+    private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        if (scene.buildIndex != 1) { return; }
+
+        levelState = FindObjectOfType<LevelManager>().StateOfTheLevel;
+
+        isGameActive = true;
+    }
+
 
     private void LoadGameScreen()
     {
@@ -143,7 +177,7 @@ public class UIManager : MonoBehaviour, IPointerDownHandler
 
         tapArea.gameObject.SetActive(false);
         tapToPlayText.gameObject.SetActive(false);
-        topRunButton.gameObject.SetActive(false);
+        quitButton.gameObject.SetActive(false);
         pauseButton.gameObject.SetActive(true);
         coinText.gameObject.SetActive(true);
         scoreText.gameObject.SetActive(true);
@@ -152,6 +186,7 @@ public class UIManager : MonoBehaviour, IPointerDownHandler
     public void HandlePauseButtonClick()
     {
         OnPauseButtonClicked?.Invoke();
+
         pauseButton.gameObject.SetActive(false);
         resumeButton.gameObject.SetActive(true);
     }
@@ -159,6 +194,7 @@ public class UIManager : MonoBehaviour, IPointerDownHandler
     public void HandleResumeButtonClick()
     {
         OnResumeButtonClicked?.Invoke();
+
         pauseButton.gameObject.SetActive(true);
         resumeButton.gameObject.SetActive(false);
     }
@@ -174,7 +210,7 @@ public class UIManager : MonoBehaviour, IPointerDownHandler
 
         for (int i = 0; i < POWER_UP_IMAGE_COUNT; i++)
         {
-            powerUpImagesCountersDict[(imageColor)i] = 0;
+            powerUpImagesCountersDict[(ImageColor)i] = 0;
         }
         StopAllCoroutines();
 
@@ -182,63 +218,37 @@ public class UIManager : MonoBehaviour, IPointerDownHandler
         tapToPlayText.gameObject.SetActive(true);
         tapArea.gameObject.SetActive(true);
         doubleTapText.gameObject.SetActive(false);
-        topRunButton.gameObject.SetActive(true);
-    }
-
-    private void ActivateDoubleTap()
-    {
-        doubleTapText.text = $"-{DOUBLE_TAP_COIN_COUNT} coins";
-        doubleTapText.gameObject.SetActive(true);
-
-
-        powerUpImages[(int)imageColor.black].transform.position = posDict[activePowerUpCount];
-        powerUpImagesPosDict[imageColor.black] = activePowerUpCount;
-        powerUpImages[(int)imageColor.black].gameObject.SetActive(true);
-
-        StartCoroutine(FadeColor(imageColor.black, black));
-        activePowerUpCount++;
-
-    }
-
-    private void DeactivateDoubleTap()
-    {
-        doubleTapText.gameObject.SetActive(false);
-        powerUpImagesCountersDict[imageColor.black] = POWER_UP_DURATION;
-    }
-
-    private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
-    {
-        if (scene.buildIndex != 1) { return; }
-
-        levelState = FindObjectOfType<LevelManager>().StateOfTheLevel;
-
-        isGameActive = true;
+        quitButton.gameObject.SetActive(true);
     }
 
     private void OnEnable()
     {
+        GameManager.OnRestartGame += LoadGameScreen;
         SceneManager.sceneLoaded += OnSceneLoaded; 
         Player.OnPlayerDeath += LoadGameOverScreen;
+
         Player.OnCoinPickUp += UpdateCoinText;
+
         Player.OnBlueDoubleScorePickUp += ActivateBlueDoubleScore;
         Player.OnGreenHighJumpPickUp += ActivateGreenHighJump;
         Player.OnRedMagnetPickUp += ActivateRedMagnet;
         LevelManager.OnActivateDoubleTap += ActivateDoubleTap;
         Player.OnDeactivateDoubleTap += DeactivateDoubleTap;  
-        GameManager.OnRestartGame += LoadGameScreen;
     }
 
     private void OnDisable()
     {
+        GameManager.OnRestartGame -= LoadGameScreen;
         SceneManager.sceneLoaded -= OnSceneLoaded;
         Player.OnPlayerDeath -= LoadGameOverScreen;
+
         Player.OnCoinPickUp -= UpdateCoinText;
+
         Player.OnBlueDoubleScorePickUp -= ActivateBlueDoubleScore;
         Player.OnGreenHighJumpPickUp -= ActivateGreenHighJump;
         Player.OnRedMagnetPickUp -= ActivateRedMagnet;
         LevelManager.OnActivateDoubleTap -= ActivateDoubleTap;
         Player.OnDeactivateDoubleTap -= DeactivateDoubleTap;
-        GameManager.OnRestartGame -= LoadGameScreen;
     }
 
     private void UpdateCoinText()

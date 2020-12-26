@@ -6,15 +6,23 @@ using System.Linq;
 
 public class ObjectPooler : MonoBehaviour
 {
+    public static ObjectPooler Instance;
+
     [Serializable] public class Pool
     {
-        public objectTag tag;
+        public ObjectTag tag;
         public GameObject prefab;
         public Transform container;
         public int poolSize;
     }
 
-    public enum objectTag
+    public List<Pool> pools;
+
+    public Dictionary<ObjectTag, Queue<GameObject>> poolDictionary = new Dictionary<ObjectTag, Queue<GameObject>>();
+
+    public Dictionary<ObjectTag, float> zSizes = new Dictionary<ObjectTag, float>();
+
+    public enum ObjectTag
     {
         building1,
         building2,
@@ -33,25 +41,42 @@ public class ObjectPooler : MonoBehaviour
         empty,
     }
 
-    public List<Pool> pools;
-
-    public Dictionary<objectTag, Queue<GameObject>> poolDictionary;
-
-    public Dictionary<objectTag, float> zSizes;
-
-    public static ObjectPooler Instance;
-
-    private void Awake()
+    public void SpawnFromPool(ObjectTag tag, Vector3 position, Quaternion rotation, string name = null)
     {
-        Instance = this;
+
+        GameObject objectToSpawn = ReturnInactiveObject(tag);
+
+        objectToSpawn.SetActive(true);
+        objectToSpawn.transform.position = position;
+        objectToSpawn.transform.rotation = rotation;
+
+        if (name != null)
+        {
+            objectToSpawn.name = name;
+        }
+
+        poolDictionary[tag].Enqueue(objectToSpawn);
     }
 
-    private void Start()
+    public void DeactivateSpawnedObject(GameObject gameObject)
     {
-        poolDictionary = new Dictionary<objectTag, Queue<GameObject>>();
+        gameObject.SetActive(false);
+    }
 
-        zSizes = new Dictionary<objectTag, float>();
+    private GameObject ReturnInactiveObject(ObjectTag tag)
+    {
+        if (poolDictionary[tag].Peek().activeSelf)
+        {
+            Debug.LogError($"{tag} size should be increased.");
 
+            poolDictionary[tag].Enqueue(poolDictionary[tag].Dequeue());
+            return ReturnInactiveObject(tag);
+        }
+        return poolDictionary[tag].Dequeue();
+    }
+
+    private void GetZSizes()
+    {
         foreach (Pool pool in pools)
         {
             Queue<GameObject> objectPool = new Queue<GameObject>();
@@ -69,7 +94,7 @@ public class ObjectPooler : MonoBehaviour
             {
                 zSizes.Add(pool.tag, pool.prefab.GetComponent<Renderer>().bounds.size.z);
             }
-            else if (pool.tag == objectTag.busWRamp)
+            else if (pool.tag == ObjectTag.busWRamp)
             {
                 float totalZLength = pool.prefab.transform.GetChild(0).GetChild(0).GetComponent<Renderer>().bounds.size.z + pool.prefab.transform.GetChild(1).GetChild(0).GetChild(0).GetComponent<Renderer>().bounds.size.z;
                 zSizes.Add(pool.tag, totalZLength);
@@ -86,34 +111,34 @@ public class ObjectPooler : MonoBehaviour
         }
     }
 
-    private GameObject ReturnInactiveObject(objectTag tag)
+    private void OnEnable()
     {
-        if (poolDictionary[tag].Peek().activeSelf)
+        Player.OnPlayerDeath += (()=> 
         {
-            Debug.LogError($"{tag} size should be increased.");
-            poolDictionary[tag].Enqueue(poolDictionary[tag].Dequeue());
-            return ReturnInactiveObject(tag);
-        }
-        return poolDictionary[tag].Dequeue();
+            pools.Clear();
+            poolDictionary.Clear();
+            zSizes.Clear();
+        });
     }
 
-    public void SpawnFromPool(objectTag tag, Vector3 position, Quaternion rotation, string name = null)
+    private void OnDisable()
     {
-
-        GameObject objectToSpawn = ReturnInactiveObject(tag);
-        objectToSpawn.SetActive(true);
-        objectToSpawn.transform.position = position;
-        objectToSpawn.transform.rotation = rotation;
-        if (name != null) 
+        Player.OnPlayerDeath -= (() =>
         {
-            objectToSpawn.name = name; 
-        }
-
-        poolDictionary[tag].Enqueue(objectToSpawn);
+            pools.Clear();
+            poolDictionary.Clear();
+            zSizes.Clear();
+        });
     }
 
-    public void DeactivateSpawnedObject(GameObject gameObject)
+    private void Awake()
     {
-        gameObject.SetActive(false);
+        Instance = this;
     }
+
+    private void Start()
+    {
+        GetZSizes();
+    }
+
 }

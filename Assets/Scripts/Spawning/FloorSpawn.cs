@@ -15,28 +15,34 @@ public class FloorSpawn : MonoBehaviour
     [SerializeField] private Transform streetLampContainer;
     [SerializeField] private Transform benchContainer;
 
+    private const float SPAWN_OFFSET = 10f;
+
     private float streetZSize;
     private float crosswalkZSize;
     private Vector3 grassSize;
-    private const float SPAWN_OFFSET = 5f;
+
     private readonly Vector3 streetLampSpawnDistance = new Vector3(0f, 0f, 35f);
     private readonly Vector3 benchStreetLampDistance = new Vector3(0f, 0f, 1f);
     private readonly Vector3 benchHeight = new Vector3(0f, 0.25f, 0f);
+
     private const int STREET_LAMP_LIST_SIZE = 2 * 3;
     private const int BENCH_LIST_SIZE = 2 * STREET_LAMP_LIST_SIZE;
-
     private const int STREET_LIST_SIZE = 8;
+
     private const int ALIGNED_GRASS_COUNT = 3;
     private const int GRASS_LIST_SIZE = ALIGNED_GRASS_COUNT * STREET_LIST_SIZE;
+
+    private const int CROSSWALK_INVERSE_SPAWN_FREQ = 6;
+
     private int benchListIndex = 0;
     private int streetListIndex = 0;
     private int grassListIndex = 0;
     private int streetLampListIndex = 0;
 
-    private List<Transform> streetList = new List<Transform>();
-    private List<Transform> grassList = new List<Transform>();
-    private List<Transform> streetLampList = new List<Transform>();
-    private List<Transform> benchList = new List<Transform>();
+    private readonly List<Transform> streetList = new List<Transform>();
+    private readonly List<Transform> grassList = new List<Transform>();
+    private readonly List<Transform> streetLampList = new List<Transform>();
+    private readonly List<Transform> benchList = new List<Transform>();
     private Transform crosswalk;
 
     private readonly Vector3 initialStreetSpawnPos = new Vector3(0f, 0f, -6f);
@@ -46,6 +52,8 @@ public class FloorSpawn : MonoBehaviour
     private readonly Quaternion rightStreetLampRotation = Quaternion.Euler(0f, 0f, 0f);
     private readonly Quaternion leftBenchRotation = Quaternion.Euler(0f, 90f, 0f);
     private readonly Quaternion rightBenchRotation = Quaternion.Euler(0f, 270f, 0f);
+
+    private bool isPlayerAlive = true;
 
     private void InitialSpawn()
     {
@@ -70,6 +78,7 @@ public class FloorSpawn : MonoBehaviour
         {
             streetLampList.Add(Instantiate(streetLampPrefab, leftStreetLampSpawnPos + i * streetLampSpawnDistance, leftStreetLampRotation, streetLampContainer));
             streetLampList.Add(Instantiate(streetLampPrefab, rightStreetLampSpawnPos + i * streetLampSpawnDistance, rightStreetLampRotation, streetLampContainer));
+            
             benchList.Add(Instantiate(benchPrefab, leftStreetLampSpawnPos + i * streetLampSpawnDistance + benchHeight - benchStreetLampDistance, leftBenchRotation, benchContainer));
             benchList.Add(Instantiate(benchPrefab, leftStreetLampSpawnPos + i * streetLampSpawnDistance + benchHeight + benchStreetLampDistance, leftBenchRotation, benchContainer));
             benchList.Add(Instantiate(benchPrefab, rightStreetLampSpawnPos + i * streetLampSpawnDistance + benchHeight - benchStreetLampDistance, rightBenchRotation, benchContainer));
@@ -83,7 +92,7 @@ public class FloorSpawn : MonoBehaviour
 
         float spawnPosition = Mathf.Max(streetList[(streetListIndex + STREET_LIST_SIZE - 1) % STREET_LIST_SIZE].position.z + streetZSize/2, crosswalk.position.z + crosswalkZSize/2);
 
-        int randomSpawnNumber = Random.Range(0, 6);
+        int randomSpawnNumber = Random.Range(0, CROSSWALK_INVERSE_SPAWN_FREQ);
 
         if (randomSpawnNumber == 0 && playerTransform.position.z > crosswalk.position.z + SPAWN_OFFSET)
         {
@@ -136,6 +145,30 @@ public class FloorSpawn : MonoBehaviour
         benchListIndex = (benchListIndex + 4) % BENCH_LIST_SIZE;
     }
 
+    private void OnEnable()
+    {
+        Player.OnPlayerDeath += (()=>
+        {
+            streetList.Clear();
+            grassList.Clear();
+            streetLampList.Clear();
+            benchList.Clear();
+            isPlayerAlive = false;
+        });
+    }
+
+    private void OnDisable()
+    {
+        Player.OnPlayerDeath -= (() =>
+        {
+            streetList.Clear();
+            grassList.Clear();
+            streetLampList.Clear();
+            benchList.Clear();
+            isPlayerAlive = false;
+        });
+    }
+
     private void Start()
     {
         streetZSize = streetPrefab.GetChild(0).GetComponent<Renderer>().bounds.size.z;
@@ -147,6 +180,8 @@ public class FloorSpawn : MonoBehaviour
 
     private void Update()
     {
+        if (!isPlayerAlive) { return; }
+
         ChangeStreetPositions();
         ChangeGrassPositions();
         ChangeStreetLampPositions();

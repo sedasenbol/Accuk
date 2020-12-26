@@ -449,21 +449,21 @@ public class Player : MonoBehaviour
     private void OnEnable()
     {
         TouchController.OnEndDragMovement += DetermineDragDirection;
-        GameManager.OnDeactivateGreenHighJump += DeactivateGreenHighJump;
-        GameManager.OnDeactivateRedMagnet += DeactivateRedMagnet;
-        GameManager.OnDeactivateBlueDoubleScore += DeactivateBlueDoubleScore;
-        GameManager.OnActivateDoubleTap += ActivateDoubleTap;
-        GameManager.OnDeactivateDoubleTap += DeactivateDoubleTap;
+        LevelManager.OnDeactivateGreenHighJump += DeactivateGreenHighJump;
+        LevelManager.OnDeactivateRedMagnet += DeactivateRedMagnet;
+        LevelManager.OnDeactivateBlueDoubleScore += DeactivateBlueDoubleScore;
+        LevelManager.OnActivateDoubleTap += ActivateDoubleTap;
+        LevelManager.OnDeactivateDoubleTap += DeactivateDoubleTap;
     }
 
     private void OnDisable()
     {
         TouchController.OnEndDragMovement -= DetermineDragDirection;
-        GameManager.OnDeactivateGreenHighJump -= DeactivateGreenHighJump;
-        GameManager.OnDeactivateRedMagnet -= DeactivateRedMagnet;
-        GameManager.OnDeactivateBlueDoubleScore -= DeactivateBlueDoubleScore;
-        GameManager.OnActivateDoubleTap -= ActivateDoubleTap;
-        GameManager.OnDeactivateDoubleTap -= DeactivateDoubleTap;
+        LevelManager.OnDeactivateGreenHighJump -= DeactivateGreenHighJump;
+        LevelManager.OnDeactivateRedMagnet -= DeactivateRedMagnet;
+        LevelManager.OnDeactivateBlueDoubleScore -= DeactivateBlueDoubleScore;
+        LevelManager.OnActivateDoubleTap -= ActivateDoubleTap;
+        LevelManager.OnDeactivateDoubleTap -= DeactivateDoubleTap;
     }
 
     private void Start()

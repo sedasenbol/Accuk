@@ -5,7 +5,7 @@ using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using TMPro;
 using System;
-using DG.Tweening;
+using UnityEngine.SceneManagement;
 
 public class UIManager : MonoBehaviour, IPointerDownHandler
 {
@@ -26,8 +26,9 @@ public class UIManager : MonoBehaviour, IPointerDownHandler
     private const int POWER_UP_IMAGE_COUNT = 4;
     private const int DOUBLE_TAP_COIN_COUNT = 50;
     private const float POWER_UP_DURATION = 25f;
-    private GameState gameState;
+    private LevelState levelState;
     private int activePowerUpCount = 0;
+    private bool isGameActive = false;
 
     private Dictionary<int, Vector3> posDict = new Dictionary<int, Vector3>(POWER_UP_IMAGE_COUNT);
     private Dictionary<imageColor, int> powerUpImagesPosDict = new Dictionary<imageColor, int> { { imageColor.red, 0}, {imageColor.black, 1 }, { imageColor.blue, 2 }, { imageColor.green, 3 } };
@@ -53,7 +54,7 @@ public class UIManager : MonoBehaviour, IPointerDownHandler
         LoadGameScreen();
     }
 
-    private IEnumerator FadeColor(int posIndex, imageColor colorOfImage, Color colorToFade)
+    private IEnumerator FadeColor(imageColor colorOfImage, Color colorToFade)
     {
         while (powerUpImagesCountersDict[colorOfImage]<POWER_UP_DURATION)
         {
@@ -95,7 +96,7 @@ public class UIManager : MonoBehaviour, IPointerDownHandler
         powerUpImagesPosDict[imageColor.blue] = activePowerUpCount;
         powerUpImages[(int)imageColor.blue].gameObject.SetActive(true);
 
-        StartCoroutine(FadeColor(activePowerUpCount, imageColor.blue, blue));
+        StartCoroutine(FadeColor(imageColor.blue, blue));
         activePowerUpCount++;
 
     }
@@ -113,7 +114,7 @@ public class UIManager : MonoBehaviour, IPointerDownHandler
         powerUpImagesPosDict[imageColor.green] = activePowerUpCount;
         powerUpImages[(int)imageColor.green].gameObject.SetActive(true);
 
-        StartCoroutine(FadeColor(activePowerUpCount, imageColor.green, green));
+        StartCoroutine(FadeColor(imageColor.green, green));
         activePowerUpCount++;
 
     }
@@ -131,14 +132,13 @@ public class UIManager : MonoBehaviour, IPointerDownHandler
         powerUpImagesPosDict[imageColor.red] = activePowerUpCount;
         powerUpImages[(int)imageColor.red].gameObject.SetActive(true);
 
-        StartCoroutine(FadeColor(activePowerUpCount, imageColor.red, red));
+        StartCoroutine(FadeColor(imageColor.red, red));
         activePowerUpCount++;
 
     }
 
     private void LoadGameScreen()
     {
-        gameState = FindObjectOfType<GameManager>().stateOfTheGame;
         activePowerUpCount = 0;
 
         tapArea.gameObject.SetActive(false);
@@ -165,10 +165,13 @@ public class UIManager : MonoBehaviour, IPointerDownHandler
 
     private void LoadGameOverScreen()
     {
+        isGameActive = false;
+
         foreach (Image image in powerUpImages)
         {
             image.gameObject.SetActive(false);
         }
+
         for (int i = 0; i < POWER_UP_IMAGE_COUNT; i++)
         {
             powerUpImagesCountersDict[(imageColor)i] = 0;
@@ -192,7 +195,7 @@ public class UIManager : MonoBehaviour, IPointerDownHandler
         powerUpImagesPosDict[imageColor.black] = activePowerUpCount;
         powerUpImages[(int)imageColor.black].gameObject.SetActive(true);
 
-        StartCoroutine(FadeColor(activePowerUpCount, imageColor.black, black));
+        StartCoroutine(FadeColor(imageColor.black, black));
         activePowerUpCount++;
 
     }
@@ -203,54 +206,63 @@ public class UIManager : MonoBehaviour, IPointerDownHandler
         powerUpImagesCountersDict[imageColor.black] = POWER_UP_DURATION;
     }
 
+    private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        if (scene.buildIndex != 1) { return; }
+
+        levelState = FindObjectOfType<LevelManager>().StateOfTheLevel;
+
+        isGameActive = true;
+    }
+
     private void OnEnable()
     {
+        SceneManager.sceneLoaded += OnSceneLoaded; 
         Player.OnPlayerDeath += LoadGameOverScreen;
         Player.OnCoinPickUp += UpdateCoinText;
         Player.OnBlueDoubleScorePickUp += ActivateBlueDoubleScore;
         Player.OnGreenHighJumpPickUp += ActivateGreenHighJump;
         Player.OnRedMagnetPickUp += ActivateRedMagnet;
-        GameManager.OnActivateDoubleTap += ActivateDoubleTap;
+        LevelManager.OnActivateDoubleTap += ActivateDoubleTap;
         Player.OnDeactivateDoubleTap += DeactivateDoubleTap;  
         GameManager.OnRestartGame += LoadGameScreen;
     }
 
     private void OnDisable()
     {
+        SceneManager.sceneLoaded -= OnSceneLoaded;
         Player.OnPlayerDeath -= LoadGameOverScreen;
         Player.OnCoinPickUp -= UpdateCoinText;
         Player.OnBlueDoubleScorePickUp -= ActivateBlueDoubleScore;
         Player.OnGreenHighJumpPickUp -= ActivateGreenHighJump;
         Player.OnRedMagnetPickUp -= ActivateRedMagnet;
-        GameManager.OnActivateDoubleTap -= ActivateDoubleTap;
+        LevelManager.OnActivateDoubleTap -= ActivateDoubleTap;
         Player.OnDeactivateDoubleTap -= DeactivateDoubleTap;
         GameManager.OnRestartGame -= LoadGameScreen;
     }
 
     private void UpdateCoinText()
     {
-        coinText.text = gameState.Coins.ToString();
+        coinText.text = levelState.Coins.ToString();
     }
 
     private void UpdateScoreText()
     {
-        scoreText.text = ((int)gameState.Score).ToString();
+        scoreText.text = ((int)levelState.Score).ToString();
     }
 
     private void Start()
     {
-        gameState = FindObjectOfType<GameManager>().stateOfTheGame;
-
-
         for (int i = 0; i < POWER_UP_IMAGE_COUNT; i++)
         {
             posDict[i] = powerUpImages[i].transform.position;
         }
-
     }
 
     private void Update()
     {
+        if (!isGameActive) { return; }
+
         UpdateScoreText();
         UpdateCoinText();
     }

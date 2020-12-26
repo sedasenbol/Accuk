@@ -13,7 +13,7 @@ public class Coin : MonoBehaviour
     private ObjectPooler objectPooler;
     private Transform cameraTransform;
     private Transform xform;
-    private GameState gameState;
+    private LevelState levelState;
     private Vector3 currentVelocity;
     private bool isPlayerHitTheObstacle = false;
 
@@ -28,7 +28,7 @@ public class Coin : MonoBehaviour
         playerTransform = GameObject.FindGameObjectWithTag("Player").transform;
         xform = GetComponent<Transform>();
         objectPooler = ObjectPooler.Instance;
-        gameState = FindObjectOfType<GameManager>().stateOfTheGame;
+        levelState = FindObjectOfType<LevelManager>().StateOfTheLevel;
         currentVelocity = Vector3.zero;
 
         tween = transform.DORotate(animRotation, ANIM_DURATION, RotateMode.LocalAxisAdd);
@@ -38,7 +38,7 @@ public class Coin : MonoBehaviour
 
     private void Update()
     {
-        if (isPlayerHitTheObstacle || !gameState.IsRedMagnetActive || Mathf.Abs(xform.position.z - playerTransform.position.z) > 5f) { return; }
+        if (isPlayerHitTheObstacle || !levelState.IsRedMagnetActive || Mathf.Abs(xform.position.z - playerTransform.position.z) > 5f) { return; }
 
         MoveTowardsPlayer();
     }

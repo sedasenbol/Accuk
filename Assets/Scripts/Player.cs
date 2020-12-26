@@ -292,8 +292,6 @@ public class Player : MonoBehaviour
         }
 
         isOnSlope = false;
-        //rb.velocity = Vector3.zero;
-        //rb.AddForce(pullDownForce);
     }
 
     private void Die()
